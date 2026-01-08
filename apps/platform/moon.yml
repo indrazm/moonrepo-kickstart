@@ -5,11 +5,11 @@ language: 'typescript'
 
 tasks:
   dev:
-    command: 'vite --port 3000'
+    command: 'pnpm run dev'
     local: true
 
   build:
-    command: 'vite build && tsc'
+    command: 'pnpm run build'
 
   test:
-    command: 'vitest run'
+    command: 'pnpm run test'
