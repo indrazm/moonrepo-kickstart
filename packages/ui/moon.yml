@@ -1,0 +1,29 @@
+type: 'library'
+language: 'typescript'
+platform: 'node'
+
+tasks:
+  dev:
+    command: 'pnpm run dev'
+    local: true
+    inputs:
+      - 'src/**/*.css'
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+    outputs:
+      - 'dist/styles.css'
+
+  build:
+    command: 'pnpm run build'
+    inputs:
+      - 'src/**/*.css'
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+    outputs:
+      - 'dist/styles.css'
+
+  typecheck:
+    command: 'tsc --noEmit'
+    inputs:
+      - 'src/**/*'
+      - 'tsconfig.json'

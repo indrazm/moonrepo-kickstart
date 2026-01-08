@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!apps/api", "!.zed", "!**/*.gen.ts"]
+    "includes": ["**", "packages/**", "!apps/api", "!.zed", "!**/*.gen.ts"]
   },
   "formatter": {
     "enabled": true,
