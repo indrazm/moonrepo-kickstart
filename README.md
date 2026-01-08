@@ -412,22 +412,6 @@ DEBUG=True
 - **Why**: Fast, all-in-one formatter and linter
 - **Benefits**: No ESLint + Prettier configuration overhead, instant feedback
 
-## Contributing
-
-1. Create a feature branch
-2. Make your changes
-3. Run tests and linting: `pnpm run check && pnpm run lint`
-4. Commit your changes
-5. Open a pull request
-
 ## License
 
 MIT
-
-## Support
-
-For issues and questions:
-- **Moonrepo**: https://moonrepo.dev/docs
-- **FastAPI**: https://fastapi.tiangolo.com
-- **TanStack**: https://tanstack.com
-- **Issues**: Create an issue in this repository
