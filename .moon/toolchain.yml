@@ -1,0 +1,7 @@
+# https://moonrepo.dev/docs/config/toolchain
+$schema: './cache/schemas/toolchain.json'
+
+# Python toolchain configuration
+python:
+  version: '3.14.0'
+  packageManager: 'uv'

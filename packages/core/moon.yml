@@ -1,0 +1,10 @@
+type: 'library'
+language: 'typescript'
+platform: 'node'
+
+tasks:
+  test:
+    command: 'vitest run'
+    inputs:
+      - 'src/**/*'
+      - 'tests/**/*'

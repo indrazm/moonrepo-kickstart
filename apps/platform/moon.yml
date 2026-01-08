@@ -1,0 +1,15 @@
+$schema: '../../.moon/cache/schemas/project.json'
+
+type: 'application'
+language: 'typescript'
+
+tasks:
+  dev:
+    command: 'vite --port 3000'
+    local: true
+
+  build:
+    command: 'vite build && tsc'
+
+  test:
+    command: 'vitest run'
