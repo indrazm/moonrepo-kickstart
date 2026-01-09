@@ -1,11 +1,11 @@
 import type { ApiClient } from "../client";
 import type {
-	UserCreate,
-	UserResponse,
-	Token,
+	AccessTokenResponse,
 	LoginRequest,
 	RefreshTokenRequest,
-	AccessTokenResponse,
+	Token,
+	UserCreate,
+	UserResponse,
 } from "../types";
 
 export class AuthApi {
