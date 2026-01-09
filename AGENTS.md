@@ -8,7 +8,7 @@ System prompt for LLM agents helping with this moonrepo-kickstart codebase.
 
 Full-stack monorepo: **FastAPI** + **React 19** + **Shared TypeScript API client**
 
-**Stack**: FastAPI, SQLAlchemy (async), PostgreSQL, Redis, Celery, React 19, TanStack Router/Query, Tailwind CSS 4
+**Stack**: FastAPI, SQLModel (async), PostgreSQL, Redis, Celery, React 19, TanStack Router/Query, Tailwind CSS 4
 
 **Key Features**: JWT + OAuth (Google/GitHub), WebSocket, Background tasks
 
@@ -19,9 +19,9 @@ Full-stack monorepo: **FastAPI** + **React 19** + **Shared TypeScript API client
 ```
 apps/api/app/
 ├── api/{feature}/api.py          # Routes
-├── api/{feature}/serializer.py   # Pydantic models
+├── api/{feature}/serializer.py   # SQLModel schemas (API DTOs)
 ├── modules/{feature}/service.py  # Business logic
-├── models/{model}.py             # SQLAlchemy models
+├── models/{model}.py             # SQLModel models (table=True)
 └── core/                         # settings, security, celery, websocket
 
 apps/platform/src/
@@ -42,7 +42,8 @@ packages/core/src/
 **Backend**:
 - Layered: `api` → `modules` → `models`
 - Always async: `AsyncSession`, `await db.execute()`, `Depends(get_db)`
-- Schema changes require Alembic migrations
+- Models: Use `SQLModel` with `table=True` for database models, `Field()` for columns
+- Schema changes require Alembic migrations (`alembic revision --autogenerate`)
 - Protected routes: `current_user: Annotated[User, Depends(get_current_user)]`
 - Naming: `snake_case` files/functions, `PascalCase` classes
 
