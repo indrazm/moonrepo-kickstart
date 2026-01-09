@@ -7,7 +7,7 @@ A modern, production-ready full-stack monorepo template powered by [moonrepo](ht
 - **Monorepo Architecture** - Organized with moonrepo for efficient task orchestration
 - **Type-Safe API Client** - Shared TypeScript package (`@repo/core`) for frontend-backend communication
 - **Modern Frontend** - React 19 with TanStack Router (file-based routing), Query, and Tailwind CSS 4
-- **Async Python Backend** - FastAPI with async SQLAlchemy, PostgreSQL, JWT + OAuth authentication
+- **Async Python Backend** - FastAPI with SQLModel, PostgreSQL, JWT + OAuth authentication via Authlib
 - **OAuth Integration** - Google and GitHub OAuth with automatic user linking and account creation
 - **Real-time Communication** - WebSocket support with Redis-backed connection management for horizontal scaling
 - **Background Jobs** - Celery integration for asynchronous task processing with Redis broker
@@ -21,24 +21,25 @@ A modern, production-ready full-stack monorepo template powered by [moonrepo](ht
 - **React 19.2.0** - Latest React with concurrent features
 - **TanStack Router 1.132** - Type-safe file-based routing with auto code-splitting
 - **TanStack Query 5.66** - Server state management with caching
-- **Vite 7.1** - Lightning-fast build tool with HMR
+- **Vite 5.0** - Lightning-fast build tool with HMR
 - **Tailwind CSS 4.0** - Utility-first styling with new CSS engine
 - **TypeScript 5.7** - Full type safety
-- **Vitest 3.0** - Fast unit testing framework
+- **Vitest** - Fast unit testing framework
+- **Testing Library 16.2** - React component testing
 
 ### Backend (`apps/api`)
-- **FastAPI 0.128** - Modern async Python framework with OpenAPI
-- **SQLAlchemy 2.0** - Async ORM with asyncpg driver
-- **PostgreSQL 14+** - Primary database
-- **Alembic 1.17** - Database migrations with auto-generation
+- **FastAPI 0.128+** - Modern async Python framework with OpenAPI
+- **SQLModel** - Combined SQLAlchemy + Pydantic for database models
+- **PostgreSQL 14+** - Primary database with asyncpg driver
+- **Alembic 1.17+** - Database migrations with auto-generation
 - **JWT Authentication** - Access (30min) + refresh (7 days) tokens
-- **OAuth** - Google and GitHub authentication with user linking
-- **Celery 5.6** - Background task queue with thread pool
-- **Redis 7.1** - Caching, message broker, WebSocket state
-- **Uvicorn 0.40** - ASGI server with hot reload
+- **OAuth** - Google and GitHub authentication with user linking via Authlib
+- **Celery 5.6+** - Background task queue with Redis broker
+- **Redis 7.1+** - Caching, message broker, WebSocket state
+- **Uvicorn 0.40+** - ASGI server with hot reload
 - **UV** - 10-100x faster Python package manager
 - **bcrypt** - Secure password hashing
-- **httpx** - Async HTTP client for OAuth
+- **httpx 0.28+** - Async HTTP client for OAuth
 
 ### Shared (`packages/core`)
 - **Ky 1.7** - Modern fetch wrapper with retry logic
@@ -593,9 +594,9 @@ DEBUG=True
 - **Benefits**: Run only affected tasks, parallel execution, consistent tooling, incremental builds
 - **Alternative**: Nx, Turborepo (Moonrepo chosen for simplicity and speed)
 
-### FastAPI + Async SQLAlchemy
-- **Why**: Modern Python async framework with automatic OpenAPI documentation
-- **Benefits**: High performance (async I/O), built-in validation (Pydantic), type hints, auto-generated docs
+### FastAPI + SQLModel
+- **Why**: Modern Python async framework with SQLModel combining SQLAlchemy ORM and Pydantic validation
+- **Benefits**: High performance (async I/O), single model definition for both database and validation, type hints, auto-generated OpenAPI docs
 - **Pattern**: Layered architecture (API → Modules → Models) for clean separation of concerns
 
 ### TanStack Ecosystem

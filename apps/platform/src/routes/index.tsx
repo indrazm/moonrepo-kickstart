@@ -101,7 +101,7 @@ function LandingPage() {
 						/>
 						<FeatureCard
 							title="Async Python Backend"
-							description="FastAPI with async SQLAlchemy, PostgreSQL, JWT + OAuth authentication"
+							description="FastAPI with SQLModel, PostgreSQL, JWT + OAuth authentication via Authlib"
 						/>
 						<FeatureCard
 							title="OAuth Integration"
@@ -140,23 +140,23 @@ function LandingPage() {
 						<TechStackCard
 							title="Frontend"
 							items={[
-								"React 19.2.0",
+								"React 19.2",
 								"TanStack Router 1.132",
 								"TanStack Query 5.66",
-								"Vite 7.1",
-								"Tailwind CSS 4.0",
+								"Vite 5",
+								"Tailwind CSS 4",
 								"TypeScript 5.7",
-								"Vitest 3.0",
+								"Testing Library 16",
 							]}
 						/>
 						<TechStackCard
 							title="Backend"
 							items={[
 								"FastAPI 0.128",
-								"SQLAlchemy 2.0 (async)",
+								"SQLModel + SQLAlchemy 2",
 								"PostgreSQL 14+",
 								"Alembic 1.17",
-								"JWT Authentication",
+								"JWT + OAuth (Authlib)",
 								"Celery 5.6",
 								"Redis 7.1",
 								"Uvicorn 0.40",
@@ -165,9 +165,9 @@ function LandingPage() {
 						<TechStackCard
 							title="Shared & Tools"
 							items={[
-								"Ky 1.7",
+								"Ky (HTTP client)",
 								"Moonrepo",
-								"PNPM 10.27",
+								"PNPM",
 								"UV (Python)",
 								"Biome",
 								"Husky",
@@ -266,8 +266,8 @@ moon run platform:dev  # Terminal 2 (Frontend at :3000)`}
 							description="Efficient task orchestration, caching, and dependency management across multiple projects"
 						/>
 						<ArchitectureCard
-							title="FastAPI + Async SQLAlchemy"
-							description="Modern Python async framework with automatic OpenAPI documentation"
+							title="FastAPI + SQLModel"
+							description="Modern Python async framework with SQLModel combining SQLAlchemy ORM and Pydantic validation"
 						/>
 						<ArchitectureCard
 							title="TanStack Ecosystem"

@@ -8,9 +8,9 @@ System prompt for LLM agents helping with this moonrepo-kickstart codebase.
 
 Full-stack monorepo: **FastAPI** + **React 19** + **Shared TypeScript API client**
 
-**Stack**: FastAPI, SQLModel (async), PostgreSQL, Redis, Celery, React 19, TanStack Router/Query, Tailwind CSS 4
+**Stack**: FastAPI, SQLModel, PostgreSQL, Redis, Celery, React 19, TanStack Router/Query, Tailwind CSS 4
 
-**Key Features**: JWT + OAuth (Google/GitHub), WebSocket, Background tasks
+**Key Features**: JWT + OAuth (Google/GitHub), WebSocket, Background tasks, Type-safe API communication
 
 ---
 
