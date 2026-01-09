@@ -14,7 +14,7 @@ export function LoginForm() {
 		e.preventDefault();
 		try {
 			await login.mutateAsync({ username, password });
-			navigate({ to: "/" });
+			navigate({ to: "/dashboard" });
 		} catch (error) {
 			console.error("Login failed:", error);
 		}
