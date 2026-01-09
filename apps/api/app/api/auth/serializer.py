@@ -13,9 +13,16 @@ class UserCreate(UserBase):
 class UserResponse(UserBase):
     id: int
     is_active: bool
+    oauth_provider: str | None = None
+    avatar_url: str | None = None
+    full_name: str | None = None
 
     class Config:
         from_attributes = True
+
+
+class OAuthUrlResponse(BaseModel):
+    auth_url: str
 
 
 class Token(BaseModel):

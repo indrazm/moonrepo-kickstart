@@ -37,6 +37,34 @@ export class Api {
 	getClient(): ApiClient {
 		return this.client;
 	}
+
+	/**
+	 * Set authentication tokens
+	 */
+	setTokens(accessToken: string, refreshToken?: string) {
+		this.client.setTokens(accessToken, refreshToken);
+	}
+
+	/**
+	 * Clear authentication tokens
+	 */
+	clearTokens() {
+		this.client.clearTokens();
+	}
+
+	/**
+	 * Get the current access token
+	 */
+	getAccessToken() {
+		return this.client.getAccessToken();
+	}
+
+	/**
+	 * Get the current refresh token
+	 */
+	getRefreshToken() {
+		return this.client.getRefreshToken();
+	}
 }
 
 /**

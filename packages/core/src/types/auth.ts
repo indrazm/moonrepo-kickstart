@@ -12,6 +12,9 @@ export interface UserCreate extends UserBase {
 export interface UserResponse extends UserBase {
 	id: number;
 	is_active: boolean;
+	oauth_provider?: string | null;
+	avatar_url?: string | null;
+	full_name?: string | null;
 }
 
 export interface Token {
@@ -31,6 +34,15 @@ export interface RefreshTokenRequest {
 export interface AccessTokenResponse {
 	access_token: string;
 	token_type: string;
+}
+
+export interface OAuthUrlResponse {
+	auth_url: string;
+}
+
+export interface OAuthCallbackRequest {
+	code: string;
+	state?: string | null;
 }
 
 // OAuth2 Password Request Form

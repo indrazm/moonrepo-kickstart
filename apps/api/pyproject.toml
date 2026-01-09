@@ -10,7 +10,7 @@ dependencies = [
     "pydantic-settings>=2.12.0",
     "sqlalchemy>=2.0.45",
     "uvicorn[standard]>=0.40.0",
-    "passlib[bcrypt]>=1.7.4",
+    "bcrypt>=4.2.1",
     "python-jose[cryptography]>=3.5.0",
     "python-multipart>=0.0.21",
     "email-validator>=2.3.0",
@@ -19,6 +19,8 @@ dependencies = [
     "psycopg2-binary>=2.9.11",
     "redis>=7.1.0",
     "celery>=5.6.2",
+    "httpx>=0.28.1",
+    "authlib>=1.4.0",
 ]
 
 [dependency-groups]

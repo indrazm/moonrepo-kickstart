@@ -9,10 +9,8 @@ export interface ApiClientConfig {
 
 export class ApiClient {
 	private client: KyInstance;
-	private tokenStorage: {
-		accessToken?: string;
-		refreshToken?: string;
-	} = {};
+	private static ACCESS_TOKEN_KEY = "access_token";
+	private static REFRESH_TOKEN_KEY = "refresh_token";
 
 	constructor(config: ApiClientConfig) {
 		this.client = ky.create({
@@ -26,11 +24,9 @@ export class ApiClient {
 				beforeRequest: [
 					(request) => {
 						// Automatically add auth token if available
-						if (this.tokenStorage.accessToken) {
-							request.headers.set(
-								"Authorization",
-								`Bearer ${this.tokenStorage.accessToken}`,
-							);
+						const accessToken = this.getAccessToken();
+						if (accessToken) {
+							request.headers.set("Authorization", `Bearer ${accessToken}`);
 						}
 					},
 				],
@@ -43,9 +39,11 @@ export class ApiClient {
 	 * Set authentication tokens
 	 */
 	setTokens(accessToken: string, refreshToken?: string) {
-		this.tokenStorage.accessToken = accessToken;
-		if (refreshToken) {
-			this.tokenStorage.refreshToken = refreshToken;
+		if (typeof window !== "undefined") {
+			localStorage.setItem(ApiClient.ACCESS_TOKEN_KEY, accessToken);
+			if (refreshToken) {
+				localStorage.setItem(ApiClient.REFRESH_TOKEN_KEY, refreshToken);
+			}
 		}
 	}
 
@@ -53,21 +51,30 @@ export class ApiClient {
 	 * Clear authentication tokens
 	 */
 	clearTokens() {
-		this.tokenStorage = {};
+		if (typeof window !== "undefined") {
+			localStorage.removeItem(ApiClient.ACCESS_TOKEN_KEY);
+			localStorage.removeItem(ApiClient.REFRESH_TOKEN_KEY);
+		}
 	}
 
 	/**
 	 * Get the current access token
 	 */
 	getAccessToken() {
-		return this.tokenStorage.accessToken;
+		if (typeof window !== "undefined") {
+			return localStorage.getItem(ApiClient.ACCESS_TOKEN_KEY) || undefined;
+		}
+		return undefined;
 	}
 
 	/**
 	 * Get the current refresh token
 	 */
 	getRefreshToken() {
-		return this.tokenStorage.refreshToken;
+		if (typeof window !== "undefined") {
+			return localStorage.getItem(ApiClient.REFRESH_TOKEN_KEY) || undefined;
+		}
+		return undefined;
 	}
 
 	/**

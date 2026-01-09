@@ -70,7 +70,11 @@ async def authenticate_user(db: AsyncSession, username: str, password: str) -> U
     """Authenticate user with username and password."""
     user = await get_user_by_username(db, username)
 
-    if not user or not verify_password(password, user.hashed_password):
+    if (
+        not user
+        or not user.hashed_password
+        or not verify_password(password, user.hashed_password)
+    ):
         raise AuthenticationException(detail="Incorrect username or password")
 
     if not user.is_active:

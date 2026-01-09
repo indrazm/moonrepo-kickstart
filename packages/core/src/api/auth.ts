@@ -2,6 +2,7 @@ import type { ApiClient } from "../client";
 import type {
 	AccessTokenResponse,
 	LoginRequest,
+	OAuthUrlResponse,
 	RefreshTokenRequest,
 	Token,
 	UserCreate,
@@ -64,5 +65,37 @@ export class AuthApi {
 	 */
 	logout(): void {
 		this.client.clearTokens();
+	}
+
+	/**
+	 * Get Google OAuth URL
+	 * GET /auth/google
+	 */
+	async getGoogleAuthUrl(): Promise<OAuthUrlResponse> {
+		return this.client.get<OAuthUrlResponse>("auth/google");
+	}
+
+	/**
+	 * Get GitHub OAuth URL
+	 * GET /auth/github
+	 */
+	async getGithubAuthUrl(): Promise<OAuthUrlResponse> {
+		return this.client.get<OAuthUrlResponse>("auth/github");
+	}
+
+	/**
+	 * Initiate Google OAuth flow (redirect to Google)
+	 */
+	async loginWithGoogle(): Promise<void> {
+		const { auth_url } = await this.getGoogleAuthUrl();
+		window.location.href = auth_url;
+	}
+
+	/**
+	 * Initiate GitHub OAuth flow (redirect to GitHub)
+	 */
+	async loginWithGithub(): Promise<void> {
+		const { auth_url } = await this.getGithubAuthUrl();
+		window.location.href = auth_url;
 	}
 }
