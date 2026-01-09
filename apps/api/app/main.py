@@ -3,17 +3,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from sqlmodel import SQLModel
 from app.api.auth.api import router as auth_router
 from app.api.websocket import router as ws_router
 from app.core.websocket import manager
-from app.models.database import Base, engine
+from app.models.database import engine
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Create tables on startup
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(SQLModel.metadata.create_all)
     # Initialize WebSocket manager
     await manager.initialize()
     yield
@@ -24,7 +25,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Basic Auth API",
-    description="A basic API with user authentication using SQLAlchemy and JWT",
+    description="A basic API with user authentication using SQLModel and JWT",
     version="1.0.0",
     lifespan=lifespan,
 )

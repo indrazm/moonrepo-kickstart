@@ -1,44 +1,60 @@
-from pydantic import BaseModel, EmailStr
+from sqlmodel import SQLModel
+from pydantic import EmailStr
+from typing import Optional
 
 
-class UserBase(BaseModel):
+# --- User Schemas ---
+
+
+class UserBase(SQLModel):
+    """Base schema with shared fields"""
+
     email: EmailStr
     username: str
 
 
 class UserCreate(UserBase):
+    """Schema for user registration"""
+
     password: str
 
 
 class UserResponse(UserBase):
+    """Schema for API responses (excludes sensitive fields)"""
+
     id: int
     is_active: bool
-    oauth_provider: str | None = None
-    avatar_url: str | None = None
-    full_name: str | None = None
+    oauth_provider: Optional[str] = None
+    avatar_url: Optional[str] = None
+    full_name: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
-class OAuthUrlResponse(BaseModel):
+# --- OAuth Schemas ---
+
+
+class OAuthUrlResponse(SQLModel):
     auth_url: str
 
 
-class Token(BaseModel):
+# --- Token Schemas ---
+
+
+class Token(SQLModel):
     access_token: str
     refresh_token: str
     token_type: str
 
 
-class TokenData(BaseModel):
-    username: str | None = None
+class TokenData(SQLModel):
+    username: Optional[str] = None
 
 
-class RefreshTokenRequest(BaseModel):
+class RefreshTokenRequest(SQLModel):
     refresh_token: str
 
 
-class AccessTokenResponse(BaseModel):
+class AccessTokenResponse(SQLModel):
     access_token: str
     token_type: str

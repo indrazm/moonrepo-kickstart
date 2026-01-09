@@ -2,8 +2,8 @@ from datetime import timedelta
 from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.models.user import User
 from app.models.database import get_db
@@ -27,22 +27,22 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 async def get_user_by_username(db: AsyncSession, username: str) -> User | None:
     """Get user by username."""
-    result = await db.execute(select(User).where(User.username == username))
-    return result.scalar_one_or_none()
+    result = await db.exec(select(User).where(User.username == username))
+    return result.one_or_none()
 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
     """Get user by email."""
-    result = await db.execute(select(User).where(User.email == email))
-    return result.scalar_one_or_none()
+    result = await db.exec(select(User).where(User.email == email))
+    return result.one_or_none()
 
 
 async def check_user_exists(db: AsyncSession, email: str, username: str) -> bool:
     """Check if user with email or username already exists."""
-    result = await db.execute(
+    result = await db.exec(
         select(User).where((User.email == email) | (User.username == username))
     )
-    return result.scalar_one_or_none() is not None
+    return result.one_or_none() is not None
 
 
 async def create_user(

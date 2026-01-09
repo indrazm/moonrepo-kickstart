@@ -1,6 +1,6 @@
 import httpx
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.models.user import User
 from app.core.settings import settings
@@ -107,19 +107,19 @@ async def get_or_create_oauth_user(
     full_name: str | None,
 ) -> User:
     """Get existing OAuth user or create a new one."""
-    result = await db.execute(
+    result = await db.exec(
         select(User).where(
             User.oauth_provider == provider,
             User.oauth_provider_id == provider_id,
         )
     )
-    user = result.scalar_one_or_none()
+    user = result.one_or_none()
 
     if user:
         return user
 
-    result = await db.execute(select(User).where(User.email == email))
-    user = result.scalar_one_or_none()
+    result = await db.exec(select(User).where(User.email == email))
+    user = result.one_or_none()
 
     if user:
         user.oauth_provider = provider
@@ -136,8 +136,8 @@ async def get_or_create_oauth_user(
     original_username = username
     counter = 1
     while True:
-        result = await db.execute(select(User).where(User.username == username))
-        if not result.scalar_one_or_none():
+        result = await db.exec(select(User).where(User.username == username))
+        if not result.one_or_none():
             break
         username = f"{original_username}{counter}"
         counter += 1

@@ -1,24 +1,32 @@
-from sqlalchemy import String, Integer, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
-from app.models.database import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
 
-class User(Base):
+class User(SQLModel, table=True):
+    """
+    User model for authentication and profile.
+
+    This single model serves as both:
+    - Database table model (via table=True)
+    - Pydantic schema for validation
+    """
+
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    email: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
-    username: Mapped[str] = mapped_column(
-        String, unique=True, index=True, nullable=False
-    )
-    hashed_password: Mapped[str | None] = mapped_column(String, nullable=True)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    refresh_token: Mapped[str | None] = mapped_column(
-        String, nullable=True, default=None
-    )
-    oauth_provider: Mapped[str | None] = mapped_column(String, nullable=True)
-    oauth_provider_id: Mapped[str | None] = mapped_column(
-        String, nullable=True, index=True
-    )
-    avatar_url: Mapped[str | None] = mapped_column(String, nullable=True)
-    full_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    # Primary key
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+
+    # Required fields
+    email: str = Field(unique=True, index=True)
+    username: str = Field(unique=True, index=True)
+    is_active: bool = Field(default=True)
+
+    # Optional fields
+    hashed_password: Optional[str] = Field(default=None)
+    refresh_token: Optional[str] = Field(default=None)
+
+    # OAuth fields
+    oauth_provider: Optional[str] = Field(default=None)
+    oauth_provider_id: Optional[str] = Field(default=None, index=True)
+    avatar_url: Optional[str] = Field(default=None)
+    full_name: Optional[str] = Field(default=None)

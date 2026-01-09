@@ -1,10 +1,11 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlmodel import SQLModel
+from sqlmodel.ext.asyncio.session import AsyncSession
 from app.core.settings import settings
 
 
-class Base(DeclarativeBase):
-    pass
+# SQLModel provides the base class, no need for custom Base
+# SQLModel.metadata will be used for Alembic migrations
 
 
 engine = create_async_engine(
