@@ -1,8 +1,8 @@
 import { Button } from "@repo/ui";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ModeToggle } from "@/components/mode-toggle";
 import { api } from "@/lib/api";
 import { useMe } from "@/modules/auth/hooks/useMe";
-import { ModeToggle } from "@/components/mode-toggle";
 
 export const Route = createFileRoute("/dashboard/")({
 	component: DashboardPage,
