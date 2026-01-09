@@ -2,6 +2,7 @@ import { Button } from "@repo/ui";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { api } from "@/lib/api";
 import { useMe } from "@/modules/auth/hooks/useMe";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export const Route = createFileRoute("/dashboard/")({
 	component: DashboardPage,
@@ -61,6 +62,7 @@ function DashboardPage() {
 							<span className="text-sm text-muted-foreground">
 								{user?.username}
 							</span>
+							<ModeToggle />
 							<Button variant="outline" onClick={handleLogout}>
 								Logout
 							</Button>

@@ -1,5 +1,6 @@
 import { Button } from "@repo/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export const Route = createFileRoute("/")({
 	component: LandingPage,
@@ -28,6 +29,7 @@ function LandingPage() {
 							>
 								Login
 							</Link>
+							<ModeToggle />
 							<Link to="/register">
 								<Button size="sm">Get Started</Button>
 							</Link>
