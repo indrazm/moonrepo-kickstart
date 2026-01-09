@@ -7,18 +7,29 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+		<div className="min-h-screen">
 			{/* Header */}
-			<header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<div className="container mx-auto px-4 py-4">
+			<header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
+				<div className="max-w-7xl mx-auto px-6 py-4">
 					<div className="flex items-center justify-between">
-						<div className="text-2xl font-bold">Moonrepo Kickstart</div>
-						<nav className="flex items-center gap-4">
-							<Link to="/login" className="text-sm font-medium hover:underline">
+						<div className="text-xl font-bold">Moonrepo Kickstart</div>
+						<nav className="flex items-center gap-6">
+							<a
+								href="https://github.com/indrazm/moonrepo-kickstart"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-sm font-medium hover:underline underline-offset-4"
+							>
+								GitHub
+							</a>
+							<Link
+								to="/login"
+								className="text-sm font-medium hover:underline underline-offset-4"
+							>
 								Login
 							</Link>
 							<Link to="/register">
-								<Button>Get Started</Button>
+								<Button size="sm">Get Started</Button>
 							</Link>
 						</nav>
 					</div>
@@ -26,89 +37,264 @@ function LandingPage() {
 			</header>
 
 			{/* Hero Section */}
-			<main className="container mx-auto px-4 py-20">
-				<div className="mx-auto max-w-4xl text-center space-y-8">
-					<h1 className="text-5xl font-bold tracking-tight">
-						Modern Full-Stack Monorepo Template
-					</h1>
-					<p className="text-xl text-muted-foreground">
-						A production-ready monorepo powered by{" "}
-						<span className="font-semibold">moonrepo</span>, featuring FastAPI
-						backend, React 19 frontend with TanStack ecosystem, and type-safe
-						API communication.
-					</p>
-					<div className="flex justify-center gap-4">
-						<Link to="/register">
-							<Button size="lg">Get Started</Button>
-						</Link>
-						<Link to="/login">
-							<Button variant="outline" size="lg">
-								Sign In
-							</Button>
-						</Link>
-					</div>
-				</div>
-
-				{/* Features Grid */}
-				<div className="mx-auto max-w-6xl mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-					<FeatureCard
-						title="Monorepo Architecture"
-						description="Organized with moonrepo for efficient task orchestration and dependency management"
-					/>
-					<FeatureCard
-						title="Type-Safe API Client"
-						description="Shared TypeScript package for seamless frontend-backend communication"
-					/>
-					<FeatureCard
-						title="Modern Frontend"
-						description="React 19 with TanStack Router, Query, and Tailwind CSS 4"
-					/>
-					<FeatureCard
-						title="Async Python Backend"
-						description="FastAPI with SQLAlchemy, PostgreSQL, and JWT authentication"
-					/>
-					<FeatureCard
-						title="Real-time Communication"
-						description="WebSocket support with Redis-backed connection management"
-					/>
-					<FeatureCard
-						title="Background Jobs"
-						description="Celery integration for asynchronous task processing"
-					/>
-				</div>
-
-				{/* Tech Stack Section */}
-				<div className="mx-auto max-w-4xl mt-20 space-y-6">
-					<h2 className="text-3xl font-bold text-center">Tech Stack</h2>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div className="rounded-lg border p-6 space-y-3">
-							<h3 className="text-xl font-semibold">Frontend</h3>
-							<ul className="space-y-2 text-sm text-muted-foreground">
-								<li>React 19 with concurrent features</li>
-								<li>TanStack Router for type-safe routing</li>
-								<li>TanStack Query for server state</li>
-								<li>Tailwind CSS 4 for styling</li>
-								<li>Vite 7 for fast builds</li>
-							</ul>
-						</div>
-						<div className="rounded-lg border p-6 space-y-3">
-							<h3 className="text-xl font-semibold">Backend</h3>
-							<ul className="space-y-2 text-sm text-muted-foreground">
-								<li>FastAPI with async support</li>
-								<li>SQLAlchemy 2.0 async ORM</li>
-								<li>PostgreSQL database</li>
-								<li>JWT authentication</li>
-								<li>Celery for background jobs</li>
-							</ul>
+			<section className="border-b bg-gradient-to-b from-background via-muted/30 to-background">
+				<div className="max-w-7xl mx-auto px-6 py-24">
+					<div className="max-w-xl">
+						<h1 className="text-5xl font-bold tracking-tight mb-6">
+							Moonrepo Kickstart
+						</h1>
+						<p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+							A modern, production-ready full-stack monorepo template powered by{" "}
+							<a
+								href="https://moonrepo.dev"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="font-semibold underline decoration-dotted underline-offset-4"
+							>
+								moonrepo
+							</a>
+							, featuring <strong>FastAPI</strong> backend,{" "}
+							<strong>React 19</strong> frontend with <strong>TanStack</strong>{" "}
+							ecosystem, and type-safe API communication.
+						</p>
+						<div className="flex gap-3">
+							<Link to="/register">
+								<Button size="lg">Get Started</Button>
+							</Link>
+							<a
+								href="https://github.com/indrazm/moonrepo-kickstart"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<Button variant="outline" size="lg">
+									View on GitHub
+								</Button>
+							</a>
 						</div>
 					</div>
 				</div>
-			</main>
+			</section>
+
+			{/* Features Section */}
+			<section className="border-b">
+				<div className="max-w-7xl mx-auto px-6 py-20">
+					<div className="max-w-xl mb-12">
+						<h2 className="text-3xl font-bold mb-3">Features</h2>
+						<p className="text-muted-foreground">
+							Everything you need to build modern full-stack applications
+						</p>
+					</div>
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+						<FeatureCard
+							title="Monorepo Architecture"
+							description="Organized with moonrepo for efficient task orchestration"
+						/>
+						<FeatureCard
+							title="Type-Safe API Client"
+							description="Shared TypeScript package (@repo/core) for frontend-backend communication"
+						/>
+						<FeatureCard
+							title="Modern Frontend"
+							description="React 19 with TanStack Router (file-based routing), Query, and Tailwind CSS 4"
+						/>
+						<FeatureCard
+							title="Async Python Backend"
+							description="FastAPI with async SQLAlchemy, PostgreSQL, JWT + OAuth authentication"
+						/>
+						<FeatureCard
+							title="OAuth Integration"
+							description="Google and GitHub OAuth with automatic user linking and account creation"
+						/>
+						<FeatureCard
+							title="Real-time Communication"
+							description="WebSocket support with Redis-backed connection management for horizontal scaling"
+						/>
+						<FeatureCard
+							title="Background Jobs"
+							description="Celery integration for asynchronous task processing with Redis broker"
+						/>
+						<FeatureCard
+							title="Database Migrations"
+							description="Alembic for version-controlled schema changes with auto-generation"
+						/>
+						<FeatureCard
+							title="Developer Experience"
+							description="Hot reload, DevTools, type checking, Biome formatting, and Husky pre-commit hooks"
+						/>
+					</div>
+				</div>
+			</section>
+
+			{/* Tech Stack Section */}
+			<section className="border-b bg-muted/30">
+				<div className="max-w-7xl mx-auto px-6 py-20">
+					<div className="max-w-xl mb-12">
+						<h2 className="text-3xl font-bold mb-3">Tech Stack</h2>
+						<p className="text-muted-foreground">
+							Built with the latest and most powerful technologies
+						</p>
+					</div>
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+						<TechStackCard
+							title="Frontend"
+							items={[
+								"React 19.2.0",
+								"TanStack Router 1.132",
+								"TanStack Query 5.66",
+								"Vite 7.1",
+								"Tailwind CSS 4.0",
+								"TypeScript 5.7",
+								"Vitest 3.0",
+							]}
+						/>
+						<TechStackCard
+							title="Backend"
+							items={[
+								"FastAPI 0.128",
+								"SQLAlchemy 2.0 (async)",
+								"PostgreSQL 14+",
+								"Alembic 1.17",
+								"JWT Authentication",
+								"Celery 5.6",
+								"Redis 7.1",
+								"Uvicorn 0.40",
+							]}
+						/>
+						<TechStackCard
+							title="Shared & Tools"
+							items={[
+								"Ky 1.7",
+								"Moonrepo",
+								"PNPM 10.27",
+								"UV (Python)",
+								"Biome",
+								"Husky",
+							]}
+						/>
+					</div>
+				</div>
+			</section>
+
+			{/* Getting Started Section */}
+			<section className="border-b">
+				<div className="max-w-7xl mx-auto px-6 py-20">
+					<div className="max-w-xl mb-12">
+						<h2 className="text-3xl font-bold mb-3">Getting Started</h2>
+						<p className="text-muted-foreground">
+							Get up and running in minutes
+						</p>
+					</div>
+
+					<div className="space-y-8 max-w-3xl">
+						<div>
+							<h3 className="text-lg font-semibold mb-4">Prerequisites</h3>
+							<div className="flex flex-wrap gap-3">
+								<Badge>Node.js 18+</Badge>
+								<Badge>Python 3.14+</Badge>
+								<Badge>PostgreSQL 14+</Badge>
+								<Badge>Redis 6+</Badge>
+								<Badge>PNPM, UV, Moonrepo</Badge>
+							</div>
+						</div>
+
+						<div className="space-y-6">
+							<Step
+								number="1"
+								title="Install dependencies"
+								command="pnpm install && cd apps/api && uv sync"
+							/>
+							<Step
+								number="2"
+								title="Setup environment & database"
+								command={`cp .env.example .env
+createdb moonrepo_dev
+cd apps/api && uv run alembic upgrade head`}
+							/>
+							<Step
+								number="3"
+								title="Start development servers"
+								command={`moon run api:dev      # Terminal 1 (Backend at :8000)
+moon run platform:dev  # Terminal 2 (Frontend at :3000)`}
+							/>
+						</div>
+
+						<div className="bg-muted/50 rounded-lg p-6 space-y-3">
+							<h4 className="font-semibold">Available Endpoints</h4>
+							<div className="space-y-2 text-sm">
+								<div className="flex items-center gap-3">
+									<span className="font-mono text-xs bg-background px-2 py-1 rounded">
+										:3000
+									</span>
+									<span className="text-muted-foreground">
+										Frontend Application
+									</span>
+								</div>
+								<div className="flex items-center gap-3">
+									<span className="font-mono text-xs bg-background px-2 py-1 rounded">
+										:8000
+									</span>
+									<span className="text-muted-foreground">Backend API</span>
+								</div>
+								<div className="flex items-center gap-3">
+									<span className="font-mono text-xs bg-background px-2 py-1 rounded">
+										:8000/docs
+									</span>
+									<span className="text-muted-foreground">
+										API Documentation
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Architecture Section */}
+			<section className="border-b bg-muted/30">
+				<div className="max-w-7xl mx-auto px-6 py-20">
+					<div className="max-w-xl mb-12">
+						<h2 className="text-3xl font-bold mb-3">Architecture Highlights</h2>
+						<p className="text-muted-foreground">
+							Built on solid architectural decisions
+						</p>
+					</div>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+						<ArchitectureCard
+							title="Monorepo with Moonrepo"
+							description="Efficient task orchestration, caching, and dependency management across multiple projects"
+						/>
+						<ArchitectureCard
+							title="FastAPI + Async SQLAlchemy"
+							description="Modern Python async framework with automatic OpenAPI documentation"
+						/>
+						<ArchitectureCard
+							title="TanStack Ecosystem"
+							description="Best-in-class routing and data fetching for React with type safety"
+						/>
+						<ArchitectureCard
+							title="Shared Type-Safe API Client"
+							description="Single source of truth for types, IDE autocomplete, tRPC-like DX"
+						/>
+					</div>
+				</div>
+			</section>
 
 			{/* Footer */}
-			<footer className="border-t mt-20 py-8">
-				<div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-					<p>Built with moonrepo, FastAPI, and React</p>
+			<footer className="bg-muted/30">
+				<div className="max-w-7xl mx-auto px-6 py-12">
+					<div className="flex flex-col md:flex-row justify-between items-center gap-4">
+						<div className="text-sm text-muted-foreground">
+							Built with moonrepo, FastAPI, and React
+						</div>
+						<a
+							href="https://github.com/indrazm/moonrepo-kickstart"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-sm font-medium hover:underline underline-offset-4"
+						>
+							github.com/indrazm/moonrepo-kickstart
+						</a>
+					</div>
 				</div>
 			</footer>
 		</div>
@@ -123,9 +309,79 @@ function FeatureCard({
 	description: string;
 }) {
 	return (
-		<div className="rounded-lg border p-6 space-y-2 hover:border-primary/50 transition-colors">
-			<h3 className="text-lg font-semibold">{title}</h3>
-			<p className="text-sm text-muted-foreground">{description}</p>
+		<div className="space-y-2">
+			<h3 className="font-semibold">{title}</h3>
+			<p className="text-sm text-muted-foreground leading-relaxed">
+				{description}
+			</p>
+		</div>
+	);
+}
+
+function TechStackCard({ title, items }: { title: string; items: string[] }) {
+	return (
+		<div className="space-y-4">
+			<h3 className="text-xl font-semibold">{title}</h3>
+			<ul className="space-y-2">
+				{items.map((item) => (
+					<li
+						key={item}
+						className="text-sm text-muted-foreground flex items-center gap-2"
+					>
+						<span className="w-1 h-1 rounded-full bg-foreground/40" />
+						{item}
+					</li>
+				))}
+			</ul>
+		</div>
+	);
+}
+
+function Badge({ children }: { children: React.ReactNode }) {
+	return (
+		<span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-muted border">
+			{children}
+		</span>
+	);
+}
+
+function Step({
+	number,
+	title,
+	command,
+}: {
+	number: string;
+	title: string;
+	command: string;
+}) {
+	return (
+		<div className="space-y-3">
+			<div className="flex items-center gap-3">
+				<div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold">
+					{number}
+				</div>
+				<h4 className="font-semibold">{title}</h4>
+			</div>
+			<pre className="bg-muted/80 p-4 rounded-lg text-xs font-mono overflow-x-auto border">
+				{command}
+			</pre>
+		</div>
+	);
+}
+
+function ArchitectureCard({
+	title,
+	description,
+}: {
+	title: string;
+	description: string;
+}) {
+	return (
+		<div className="bg-background border rounded-lg p-6 space-y-2 hover:border-primary/50 transition-colors">
+			<h4 className="font-semibold">{title}</h4>
+			<p className="text-sm text-muted-foreground leading-relaxed">
+				{description}
+			</p>
 		</div>
 	);
 }
