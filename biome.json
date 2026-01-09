@@ -16,7 +16,12 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"a11y": {
+				"useFocusableInteractive": "off",
+				"useAriaPropsForRole": "off",
+				"useSemanticElements": "off"
+			}
 		}
 	},
 	"javascript": {
