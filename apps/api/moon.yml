@@ -11,5 +11,5 @@ tasks:
   worker:
     command: "uv run celery -A app.core.celery worker --pool=threads --loglevel=info"
 
-  check:
+  lint:
     command: "uv run ty check"

@@ -1,2 +1,2 @@
-moon :check
+moon :lint
 pnpm lint

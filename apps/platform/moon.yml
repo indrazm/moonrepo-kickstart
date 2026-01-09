@@ -13,3 +13,6 @@ tasks:
 
   test:
     command: 'pnpm run test'
+
+  lint:
+    command: 'biome check'
