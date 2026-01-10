@@ -26,6 +26,9 @@ apps/api/app/
 
 apps/platform/src/
 ├── modules/{feature}/            # components/ + hooks/ + atoms/
+│   ├── components/               # Feature UI components
+│   ├── hooks/                    # Feature-specific hooks
+│   └── atoms/                    # Jotai state atoms
 ├── routes/{route}.tsx            # File-based routing
 └── lib/api.ts                    # Singleton API from @repo/core
 
@@ -53,6 +56,8 @@ packages/core/src/
 - **Routing**: `export const Route = createFileRoute("/path")({ component })`
 - **API calls**: ONLY use `api` from `@repo/core` (never fetch/axios)
 - **Data fetching**: Wrap in TanStack Query (`useMutation`/`useQuery`)
+- **Validation**: All validation handled by backend - frontend only shows errors via toast
+- **Toast notifications**: Use Sonner (`toast.success()`, `toast.error()`) for user feedback
 - **State management**:
   - Server state → TanStack Query
   - Client state → Jotai atoms in `modules/{feature}/atoms/`

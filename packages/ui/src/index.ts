@@ -86,5 +86,6 @@ export {
 	ToastTitle,
 	ToastViewport,
 } from "./components/ui/toast";
+export { Toaster } from "./components/ui/sonner";
 export { Toggle, toggleVariants } from "./components/ui/toggle";
 export { cn } from "./lib/utils";

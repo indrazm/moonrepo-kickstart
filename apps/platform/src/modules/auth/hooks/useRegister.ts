@@ -7,5 +7,8 @@ export function useRegister() {
 		mutationFn: async (data: UserCreate) => {
 			return api.auth.register(data);
 		},
+		onError: (error: Error) => {
+			console.error("Registration error:", error);
+		},
 	});
 }

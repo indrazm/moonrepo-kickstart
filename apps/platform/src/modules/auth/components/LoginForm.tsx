@@ -1,6 +1,7 @@
 import { Button, Input, Label } from "@repo/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useLogin } from "../hooks/useLogin";
 
@@ -12,11 +13,19 @@ export function LoginForm() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+
 		try {
 			await login.mutateAsync({ username, password });
+			toast.success("Login successful", {
+				description: "Welcome back!",
+			});
 			navigate({ to: "/dashboard" });
 		} catch (error) {
-			console.error("Login failed:", error);
+			const errorMessage =
+				error instanceof Error ? error.message : "Invalid username or password";
+			toast.error("Login failed", {
+				description: errorMessage,
+			});
 		}
 	};
 
@@ -35,6 +44,7 @@ export function LoginForm() {
 				<Input
 					id="username"
 					type="text"
+					placeholder="indrazm"
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}
 					required
@@ -45,6 +55,7 @@ export function LoginForm() {
 				<Input
 					id="password"
 					type="password"
+					placeholder="password"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 					required

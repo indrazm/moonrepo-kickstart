@@ -12,5 +12,8 @@ export function useLogin() {
 		}) => {
 			return api.auth.login({ username, password });
 		},
+		onError: (error: Error) => {
+			console.error("Login error:", error);
+		},
 	});
 }
