@@ -23,7 +23,6 @@ jobs:
 
       - uses: moonrepo/setup-toolchain@v0
         with:
-          auto-install: true
           auto-setup: true
 
       - id: projects
@@ -54,7 +53,6 @@ jobs:
 
       - uses: moonrepo/setup-toolchain@v0
         with:
-          auto-install: true
           auto-setup: true
 
       - run: moon run api:lint
@@ -72,7 +70,6 @@ jobs:
 
       - uses: moonrepo/setup-toolchain@v0
         with:
-          auto-install: true
           auto-setup: true
 
       - run: moon run platform:lint
@@ -91,7 +88,6 @@ jobs:
 
       - uses: moonrepo/setup-toolchain@v0
         with:
-          auto-install: true
           auto-setup: true
 
       - run: moon run core:lint
