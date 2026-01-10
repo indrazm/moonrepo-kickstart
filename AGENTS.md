@@ -63,7 +63,7 @@ packages/core/src/
   - Client state → Jotai atoms in `modules/{feature}/atoms/`
   - **Avoid prop drilling**: Use Jotai atoms for shared state across components
 - **Auth**: Protected routes check `useMe()` hook in layout
-- **Imports**: Use `@/` alias for local, `@repo/` for workspace packages
+- **Imports**: Use `@repo/` for workspace packages
 
 ### Shared (`@repo/core`)
 - **Types MUST match backend exactly**: Mirror Pydantic schemas field-by-field
