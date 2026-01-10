@@ -3,6 +3,9 @@ $schema: './cache/schemas/workspace.json'
 
 # extends: './shared/workspace.yml'
 
+vcs:
+  defaultBranch: main
+
 projects:
   - 'apps/*'
   - 'packages/*'
