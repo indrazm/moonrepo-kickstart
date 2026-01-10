@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import APIRouter, Depends, status, Query, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import RedirectResponse
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -12,6 +12,8 @@ from app.modules.auth.service import (
     create_tokens_for_user,
     refresh_access_token,
     get_current_user,
+    get_current_admin,
+    get_user_by_id,
 )
 from app.modules.auth.oauth_service import (
     handle_google_callback,
@@ -26,7 +28,9 @@ from .serializer import (
     RefreshTokenRequest,
     AccessTokenResponse,
     OAuthUrlResponse,
+    UserRoleUpdate,
 )
+from sqlmodel import select
 from app.core.settings import settings
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -106,3 +110,51 @@ async def github_oauth_callback(
 
     redirect_url = f"{settings.frontend_url}/auth/callback?access_token={tokens['access_token']}&refresh_token={tokens['refresh_token']}"
     return RedirectResponse(url=redirect_url)
+
+
+# Admin endpoints
+
+
+@router.get("/admin/test", response_model=dict)
+async def test_admin_access(admin_user: Annotated[User, Depends(get_current_admin)]):
+    """Test endpoint to verify admin access."""
+    return {
+        "message": "Admin access granted",
+        "user": {
+            "id": admin_user.id,
+            "username": admin_user.username,
+            "role": admin_user.role,
+        },
+    }
+
+
+@router.get("/users", response_model=list[UserResponse])
+async def list_users(
+    admin_user: Annotated[User, Depends(get_current_admin)],
+    db: AsyncSession = Depends(get_db),
+):
+    """List all users (admin only)."""
+    result = await db.exec(select(User))
+    users = result.all()
+    return users
+
+
+@router.patch("/users/{user_id}/role", response_model=UserResponse)
+async def update_user_role(
+    user_id: str,
+    role_update: UserRoleUpdate,
+    admin_user: Annotated[User, Depends(get_current_admin)],
+    db: AsyncSession = Depends(get_db),
+):
+    """Update user role (admin only)."""
+    user = await get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    user.role = role_update.role
+    await db.commit()
+    await db.refresh(user)
+    return user

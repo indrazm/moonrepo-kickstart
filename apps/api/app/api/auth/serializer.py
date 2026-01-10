@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel
 from pydantic import EmailStr
 from typing import Optional
+from app.models.user import UserRole
 
 
 # --- User Schemas ---
@@ -24,6 +25,7 @@ class UserResponse(UserBase):
 
     id: str
     is_active: bool
+    role: UserRole
     oauth_provider: Optional[str] = None
     avatar_url: Optional[str] = None
     full_name: Optional[str] = None
@@ -58,3 +60,12 @@ class RefreshTokenRequest(SQLModel):
 class AccessTokenResponse(SQLModel):
     access_token: str
     token_type: str
+
+
+# --- Role Management Schemas ---
+
+
+class UserRoleUpdate(SQLModel):
+    """Schema for updating user role (admin only)"""
+
+    role: UserRole

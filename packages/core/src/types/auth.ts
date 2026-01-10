@@ -1,3 +1,9 @@
+export enum UserRole {
+	USER = "USER",
+	ADMIN = "ADMIN",
+	MODERATOR = "MODERATOR",
+}
+
 export interface UserBase {
 	email: string;
 	username: string;
@@ -10,6 +16,7 @@ export interface UserCreate extends UserBase {
 export interface UserResponse extends UserBase {
 	id: string;
 	is_active: boolean;
+	role: UserRole;
 	oauth_provider?: string | null;
 	avatar_url?: string | null;
 	full_name?: string | null;
@@ -46,4 +53,8 @@ export interface OAuthCallbackRequest {
 export interface LoginRequest {
 	username: string;
 	password: string;
+}
+
+export interface UserRoleUpdate {
+	role: UserRole;
 }

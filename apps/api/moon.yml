@@ -16,3 +16,8 @@ tasks:
 
   lint-fix:
     command: "uv run ruff check --fix"
+
+  createsuperuser:
+    command: "uv run python -m app.cli.createsuperuser"
+    local: true
+    platform: "system"

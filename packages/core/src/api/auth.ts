@@ -7,6 +7,8 @@ import type {
 	Token,
 	UserCreate,
 	UserResponse,
+	UserRoleUpdate,
+	UserRole,
 } from "../types";
 
 export class AuthApi {
@@ -62,5 +64,24 @@ export class AuthApi {
 	async loginWithGithub(): Promise<void> {
 		const { auth_url } = await this.getGithubAuthUrl();
 		window.location.href = auth_url;
+	}
+
+	// Admin methods
+
+	async testAdminAccess(): Promise<{
+		message: string;
+		user: { id: string; username: string; role: UserRole };
+	}> {
+		return this.client.get("auth/admin/test");
+	}
+
+	async getUsers(): Promise<UserResponse[]> {
+		return this.client.get<UserResponse[]>("auth/users");
+	}
+
+	async updateUserRole(userId: string, role: UserRole): Promise<UserResponse> {
+		return this.client.patch<UserResponse>(`auth/users/${userId}/role`, {
+			role,
+		});
 	}
 }

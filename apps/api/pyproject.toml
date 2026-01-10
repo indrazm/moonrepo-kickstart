@@ -32,3 +32,6 @@ dev = [
 
 [tool.ty.src]
 exclude = ["alembic/"]
+
+[tool.ruff]
+exclude = ["alembic/"]

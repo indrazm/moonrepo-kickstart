@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.models.database import get_db
 from app.core.security import (
     verify_password,
@@ -21,6 +21,7 @@ from app.core.exceptions import (
     UserAlreadyExistsException,
     InactiveUserException,
 )
+from fastapi import HTTPException, status as http_status
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
@@ -37,6 +38,12 @@ async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
     return result.one_or_none()
 
 
+async def get_user_by_id(db: AsyncSession, user_id: str) -> User | None:
+    """Get user by ID."""
+    result = await db.exec(select(User).where(User.id == user_id))
+    return result.one_or_none()
+
+
 async def check_user_exists(db: AsyncSession, email: str, username: str) -> bool:
     """Check if user with email or username already exists."""
     result = await db.exec(
@@ -46,9 +53,13 @@ async def check_user_exists(db: AsyncSession, email: str, username: str) -> bool
 
 
 async def create_user(
-    db: AsyncSession, email: str, username: str, password: str
+    db: AsyncSession,
+    email: str,
+    username: str,
+    password: str,
+    role: UserRole = UserRole.USER,
 ) -> User:
-    """Create a new user."""
+    """Create a new user with specified role (defaults to USER)."""
     # Check if user already exists
     if await check_user_exists(db, email, username):
         raise UserAlreadyExistsException()
@@ -59,6 +70,7 @@ async def create_user(
         email=email,
         username=username,
         hashed_password=hashed_password,
+        role=role,
     )
     db.add(new_user)
     await db.commit()
@@ -83,11 +95,11 @@ async def authenticate_user(db: AsyncSession, username: str, password: str) -> U
     return user
 
 
-def create_user_access_token(username: str) -> str:
-    """Create access token for user."""
+def create_user_access_token(username: str, role: UserRole) -> str:
+    """Create access token for user with role."""
     access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
     access_token = create_access_token(
-        data={"sub": username}, expires_delta=access_token_expires
+        data={"sub": username, "role": role.value}, expires_delta=access_token_expires
     )
     return access_token
 
@@ -103,7 +115,7 @@ def create_user_refresh_token(username: str) -> str:
 
 async def create_tokens_for_user(db: AsyncSession, user: User) -> dict:
     """Create both access and refresh tokens for user and store refresh token."""
-    access_token = create_user_access_token(user.username)
+    access_token = create_user_access_token(user.username, user.role)
     refresh_token = create_user_refresh_token(user.username)
 
     # Store refresh token in database
@@ -135,7 +147,7 @@ async def refresh_access_token(db: AsyncSession, refresh_token: str) -> dict:
         raise InactiveUserException()
 
     # Create new access token
-    access_token = create_user_access_token(user.username)
+    access_token = create_user_access_token(user.username, user.role)
 
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -163,3 +175,43 @@ async def get_current_user(
 ) -> User:
     """FastAPI dependency to get current authenticated user from request."""
     return await get_current_user_from_token(db, token)
+
+
+async def get_current_admin(
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> User:
+    """FastAPI dependency to verify user is an admin."""
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=http_status.HTTP_403_FORBIDDEN,
+            detail="Admin access required",
+        )
+    return current_user
+
+
+async def get_current_moderator(
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> User:
+    """FastAPI dependency to verify user is a moderator or admin."""
+    if current_user.role not in [UserRole.MODERATOR, UserRole.ADMIN]:
+        raise HTTPException(
+            status_code=http_status.HTTP_403_FORBIDDEN,
+            detail="Moderator or admin access required",
+        )
+    return current_user
+
+
+def require_role(required_role: UserRole):
+    """Factory function to create a role check dependency."""
+
+    async def role_checker(
+        current_user: Annotated[User, Depends(get_current_user)],
+    ) -> User:
+        if not current_user.has_role(required_role):
+            raise HTTPException(
+                status_code=http_status.HTTP_403_FORBIDDEN,
+                detail=f"Role {required_role.value} or higher required",
+            )
+        return current_user
+
+    return role_checker

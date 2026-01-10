@@ -28,6 +28,13 @@ def get_password_hash(password: str) -> str:
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    """Create JWT access token with user data and role.
+
+    Token payload includes:
+    - sub: username
+    - role: user role (for fast authorization checks)
+    - exp: expiration timestamp
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
