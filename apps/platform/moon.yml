@@ -1,18 +1,21 @@
-$schema: '../../.moon/cache/schemas/project.json'
+$schema: "../../.moon/cache/schemas/project.json"
 
-type: 'application'
-language: 'typescript'
+type: "application"
+language: "typescript"
 
 tasks:
   dev:
-    command: 'pnpm run dev'
+    command: "pnpm run dev"
     local: true
 
   build:
-    command: 'pnpm run build'
+    command: "pnpm run build"
 
   test:
-    command: 'pnpm run test'
+    command: "pnpm run test"
 
   lint:
-    command: 'biome check'
+    command: "biome check"
+
+  lint-fix:
+    command: "biome check --fix --unsafe"
