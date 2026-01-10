@@ -142,3 +142,5 @@ moon :lint                # Pre-commit hook
 6. Never store passwords without bcrypt hashing
 7. Never skip `moon :lint` before committing
 8. Never import models without adding to `alembic/env.py`
+9. Never write line-by-line comment on obvious code (keep it clean)
+10. If a codeblock is complex, make sure adding a docstring/comments to explain the logic

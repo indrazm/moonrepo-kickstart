@@ -8,7 +8,7 @@ export interface UserCreate extends UserBase {
 }
 
 export interface UserResponse extends UserBase {
-	id: number;
+	id: string;
 	is_active: boolean;
 	oauth_provider?: string | null;
 	avatar_url?: string | null;
