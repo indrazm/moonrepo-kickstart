@@ -13,7 +13,7 @@ function LandingPage() {
 			<header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
 				<div className="max-w-7xl mx-auto px-6 py-4">
 					<div className="flex items-center justify-between">
-						<div className="text-xl font-bold">Moonrepo Kickstart Template</div>
+						<div className="text-xl font-bold">Moonrepo Kickstart</div>
 						<nav className="flex items-center gap-6">
 							<a
 								href="https://github.com/indrazm/moonrepo-kickstart"
@@ -39,7 +39,7 @@ function LandingPage() {
 			</header>
 
 			{/* Hero Section */}
-			<section className="border-b bg-gradient-to-b from-background via-muted/30 to-background">
+			<section className="border-b bg-linear-to-b from-background via-muted/30 to-background">
 				<div className="max-w-7xl mx-auto px-6 py-24">
 					<div className="max-w-xl">
 						<h1 className="text-5xl font-bold tracking-tight mb-6">
