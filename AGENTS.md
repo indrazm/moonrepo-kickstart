@@ -4,13 +4,13 @@ System prompt for LLM agents helping with this moonrepo-kickstart codebase.
 
 ---
 
-## Overview
+## Stack
 
-Full-stack monorepo: **FastAPI** + **React 19** + **Shared TypeScript API client**
+**Backend**: FastAPI, SQLModel, PostgreSQL, Redis, Celery  
+**Frontend**: React 19, TanStack Router/Query, Tailwind CSS 4, Jotai  
+**Shared**: Type-safe API client (`@repo/core`)
 
-**Stack**: FastAPI, SQLModel, PostgreSQL, Redis, Celery, React 19, TanStack Router/Query, Tailwind CSS 4
-
-**Key Features**: JWT + OAuth (Google/GitHub), WebSocket, Background tasks, Type-safe API communication
+**Key Features**: JWT + OAuth, WebSocket, Background tasks, Type-safe communication
 
 ---
 
@@ -19,105 +19,126 @@ Full-stack monorepo: **FastAPI** + **React 19** + **Shared TypeScript API client
 ```
 apps/api/app/
 ├── api/{feature}/api.py          # Routes
-├── api/{feature}/serializer.py   # SQLModel schemas (API DTOs)
+├── api/{feature}/serializer.py   # Pydantic schemas (DTOs)
 ├── modules/{feature}/service.py  # Business logic
-├── models/{model}.py             # SQLModel models (table=True)
+├── models/{model}.py             # SQLModel (table=True)
 └── core/                         # settings, security, celery, websocket
 
 apps/platform/src/
-├── modules/{feature}/            # components/ + hooks/ (TanStack Query)
-├── routes/{route}.tsx            # File-based routing (createFileRoute)
+├── modules/{feature}/            # components/ + hooks/ + atoms/
+├── routes/{route}.tsx            # File-based routing
 └── lib/api.ts                    # Singleton API from @repo/core
 
 packages/core/src/
-├── client.ts                     # ApiClient (ky + token mgmt)
-├── api/{feature}.ts              # API methods (tRPC-like)
-└── types/{feature}.ts            # Types mirror backend
+├── client.ts                     # ApiClient (ky + auto token refresh)
+├── api/{feature}.ts              # API methods
+└── types/{feature}.ts            # Types mirror backend exactly
 ```
 
 ---
 
-## Rules
+## Core Rules
 
-**Backend**:
-- Layered: `api` → `modules` → `models`
-- Always async: `AsyncSession`, `await db.execute()`, `Depends(get_db)`
-- Models: Use `SQLModel` with `table=True` for database models, `Field()` for columns
-- Schema changes require Alembic migrations (`alembic revision --autogenerate`)
-- Protected routes: `current_user: Annotated[User, Depends(get_current_user)]`
-- Naming: `snake_case` files/functions, `PascalCase` classes
+### Backend
+- **3-layer architecture**: `api` (routes) → `modules` (services) → `models` (DB)
+- **Always async**: `AsyncSession`, `await db.exec()`, `Depends(get_db)`
+- **Models**: `SQLModel(table=True)` with `Field()` for columns
+- **Migrations**: Required for ALL schema changes: `alembic revision --autogenerate`
+- **Auth**: Protected routes use `current_user: Annotated[User, Depends(get_current_user)]`
+- **Naming**: `snake_case` files/functions, `PascalCase` classes
+- **Import models in `alembic/env.py`**: Required for autogenerate to discover models
 
-**Frontend**:
-- Module-based: `modules/{feature}/` with `components/` + `hooks/`
-- File-based routing: `routes/{name}.tsx` → `/{name}`
-- Always use `@repo/core` API client, never fetch/axios
-- TanStack Query: Wrap calls in `useMutation` / `useQuery` hooks
-- Protected routes: Use `useMe()` hook
+### Frontend
+- **Module structure**: `modules/{feature}/` with `components/`, `hooks/`, `atoms/` (for Jotai)
+- **Routing**: `export const Route = createFileRoute("/path")({ component })`
+- **API calls**: ONLY use `api` from `@repo/core` (never fetch/axios)
+- **Data fetching**: Wrap in TanStack Query (`useMutation`/`useQuery`)
+- **State management**:
+  - Server state → TanStack Query
+  - Client state → Jotai atoms in `modules/{feature}/atoms/`
+  - **Avoid prop drilling**: Use Jotai atoms for shared state across components
+- **Auth**: Protected routes check `useMe()` hook in layout
+- **Imports**: Use `@/` alias for local, `@repo/` for workspace packages
 
-**Shared (`@repo/core`)**:
-- Types MUST mirror backend Pydantic schemas exactly
-- API pattern: `api.{feature}.{method}()`
-- Token management: `api.setTokens()`, `api.getClient().clearTokens()`
+### Shared (`@repo/core`)
+- **Types MUST match backend exactly**: Mirror Pydantic schemas field-by-field
+- **API pattern**: `api.{feature}.{method}(data)` (e.g., `api.auth.login()`)
+- **Token flow**: Auto-stored in localStorage, auto-refreshed on 401, auto-injected in headers
 
 ---
 
-## Authentication
+## Key Patterns
 
-**JWT**: Access (30min) + Refresh (7 days) tokens, stored in localStorage
+### Backend Auth Flow
+1. `POST /auth/login` → returns access + refresh tokens
+2. Protected routes verify Bearer token → inject `current_user`
+3. OAuth: `/auth/{provider}` → callback → `get_or_create_oauth_user()` → redirect to frontend with tokens
 
-**OAuth Flow**:
-1. `api.auth.loginWithGoogle()` → redirects to Google
-2. Callback: `GET /auth/google/callback?code=...`
-3. Backend: `get_or_create_oauth_user()` (searches provider_id → email → creates)
-4. Redirects: `http://localhost:3000/auth/callback?access_token=...&refresh_token=...`
-5. Frontend extracts tokens, navigates home
+### Frontend Auth Flow
+1. `useLogin()` mutation → `api.auth.login()` → tokens auto-stored → navigate
+2. OAuth: `api.auth.loginWithGoogle()` → redirects → `/auth/callback` extracts tokens → navigate
+3. Protected routes: Layout checks `useMe()` → shows loading/login/content
 
-**User Model**: `email`, `username`, `hashed_password`, `refresh_token`, `oauth_provider`, `oauth_provider_id`, `avatar_url`, `full_name`
+### State Management (Jotai)
+- Create atoms in `modules/{feature}/atoms/index.ts`
+- Use `useAtom()`, `useAtomValue()`, `useSetAtom()` in components
+- **Never prop drill state**: Lift shared state to atoms immediately
+
+### Database Operations
+```python
+# Query
+result = await db.exec(select(User).where(User.id == user_id))
+user = result.one_or_none()
+
+# Create
+db.add(new_user)
+await db.commit()
+await db.refresh(new_user)
+```
+
+### API Client (Frontend)
+```ts
+// Always use singleton from lib/api.ts
+import { api } from "@/lib/api"
+
+// Mutation hook
+const mutation = useMutation({
+  mutationFn: (data) => api.feature.method(data)
+})
+```
 
 ---
 
 ## Adding Features
 
-**Backend**: model → migration (`alembic revision --autogenerate`) → serializer → service → router → register in `main.py`
-**Frontend**: route (`routes/{name}.tsx`) → module (`modules/{feature}/`) → components + hooks → use in route
-**Shared**: types (`types/{feature}.ts`) → API class (`api/{feature}.ts`) → attach to main Api → export types
+**Backend**: model → migration → serializer → service → router → register in `main.py`  
+**Frontend**: route → module (components + hooks + atoms) → use in route  
+**Shared**: types → API class → attach to main Api
 
 ---
 
 ## Commands
 
 ```bash
-# Dev
-moon run api:dev          # FastAPI :8000
-moon run platform:dev     # Vite :3000
+moon run api:dev          # :8000
+moon run platform:dev     # :3000
 moon run api:worker       # Celery
 
-# Migrations
 cd apps/api && uv run alembic revision --autogenerate -m "msg"
 uv run alembic upgrade head
 
-# Quality
-moon :lint              # Pre-commit
+moon :lint                # Pre-commit hook
 ```
 
 ---
 
-## WebSocket & Celery
+## Critical Don'ts
 
-**WebSocket**: `/ws/{client_id}`, Redis-backed, multi-instance ready
-**Celery**: Create task in `tasks/{task}.py`, trigger with `.delay()`, run `moon run api:worker`
-
----
-
-## Don't
-
-1. Edit `routeTree.gen.ts`, `.venv/`, `node_modules/`, `*.lock`
-2. Modify DB schema without Alembic migration
-3. Use sync DB operations (always async)
-4. Use fetch/axios (use `@repo/core`)
-5. Skip formatting before commit
-6. Create users without bcrypt hashing
-7. Expose secrets (use `.env`)
-8. Bypass authentication checks
-9. Store tokens in cookies without CSRF protection
-10. Import from parent packages (use `@repo/core`)
+1. Never use `fetch`/`axios` (use `@repo/core` API)
+2. Never use sync DB operations (only `AsyncSession`)
+3. Never modify DB schema without Alembic migration
+4. Never prop drill shared state (use Jotai atoms)
+5. Never edit auto-generated files (`routeTree.gen.ts`, `.lock`)
+6. Never store passwords without bcrypt hashing
+7. Never skip `moon :lint` before committing
+8. Never import models without adding to `alembic/env.py`
