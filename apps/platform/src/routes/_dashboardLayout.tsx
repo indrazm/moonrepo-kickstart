@@ -1,4 +1,9 @@
-import { Button } from "@repo/ui";
+import {
+	Button,
+	ResizableHandle,
+	ResizablePanel,
+	ResizablePanelGroup,
+} from "@repo/ui";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Sidebar } from "@/components/sidebar";
 import { useMe } from "@/modules/auth/hooks/useMe";
@@ -43,13 +48,24 @@ function DashboardLayout() {
 	}
 
 	return (
-		<div className="flex h-screen overflow-hidden bg-background">
-			<Sidebar />
-			<div className="flex-1 flex flex-col relative min-w-0">
+		<ResizablePanelGroup
+			orientation="horizontal"
+			className="h-screen overflow-hidden bg-background"
+		>
+			<ResizablePanel
+				defaultSize="20%"
+				minSize="15%"
+				maxSize="50%"
+				className="min-w-0"
+			>
+				<Sidebar />
+			</ResizablePanel>
+			<ResizableHandle withHandle />
+			<ResizablePanel defaultSize="80%" minSize="50%" className="min-w-0">
 				<main className="flex-1 flex flex-col h-full overflow-hidden">
 					<Outlet />
 				</main>
-			</div>
-		</div>
+			</ResizablePanel>
+		</ResizablePanelGroup>
 	);
 }

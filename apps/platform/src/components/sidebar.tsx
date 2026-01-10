@@ -15,14 +15,30 @@ export function Sidebar() {
 	};
 
 	const mockSessions = [
-		{ id: "1", title: "Design a dashboard", date: "Today" },
-		{ id: "2", title: "Refactor auth logic", date: "Yesterday" },
-		{ id: "3", title: "TanStack Router help", date: "Yesterday" },
-		{ id: "4", title: "Python FastAPI tips", date: "Previous 7 days" },
+		{
+			id: "1",
+			title: "Design a dashboard with a very long title that should truncate",
+			date: "Today",
+		},
+		{
+			id: "2",
+			title: "Refactor auth logic to use the new authentication provider",
+			date: "Yesterday",
+		},
+		{
+			id: "3",
+			title: "TanStack Router help for nested routes and layouts",
+			date: "Yesterday",
+		},
+		{
+			id: "4",
+			title: "Python FastAPI tips for async database operations",
+			date: "Previous 7 days",
+		},
 	];
 
 	return (
-		<aside className="w-64 border-r bg-card h-screen flex flex-col pt-4">
+		<aside className="border-r bg-card h-screen flex flex-col pt-4 w-full">
 			<div className="px-4 flex items-center justify-between mb-4">
 				<h2 className="text-xl font-bold px-2">Moonrepo</h2>
 				<ModeToggle />
@@ -49,6 +65,7 @@ export function Sidebar() {
 								<button
 									key={session.id}
 									type="button"
+									title={session.title}
 									className="w-full flex items-center px-2 py-1.5 text-sm rounded-lg transition-colors hover:bg-accent text-left group"
 								>
 									<span className="truncate flex-1">{session.title}</span>
