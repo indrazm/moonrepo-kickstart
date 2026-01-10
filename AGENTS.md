@@ -149,4 +149,8 @@ moon :lint-fix            # Use this to fix any lint first before changing manua
 7. Never skip `moon :lint` before committing
 8. Never import models without adding to `alembic/env.py`
 9. Never write line-by-line comment on obvious code (keep it clean)
-10. If a codeblock is complex, make sure adding a docstring/comments to explain the logic
+
+## Last Guide (SUPER IMPORTANT)
+1. If a codeblock is complex, make sure adding a docstring/comments to explain the logic
+2. When you need to search docs, use `context7` tools.
+3. Inspect the library installed in the venv/node_modules if needed.
