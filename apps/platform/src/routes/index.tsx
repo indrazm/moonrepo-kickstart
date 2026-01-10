@@ -1,5 +1,6 @@
 import { Button } from "@repo/ui";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import type React from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 
 export const Route = createFileRoute("/")({
@@ -39,9 +40,9 @@ function LandingPage() {
 			</header>
 
 			{/* Hero Section */}
-			<section className="border-b bg-linear-to-b from-background via-muted/30 to-background">
+			<section className="border-b bg-gradient-to-b from-background via-muted/30 to-background">
 				<div className="max-w-7xl mx-auto px-6 py-24">
-					<div className="max-w-xl">
+					<div className="max-w-3xl">
 						<h1 className="text-5xl font-bold tracking-tight mb-6">
 							Moonrepo Kickstart
 						</h1>
@@ -51,14 +52,14 @@ function LandingPage() {
 								href="https://moonrepo.dev"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="font-semibold underline decoration-dotted underline-offset-4"
+								className="font-semibold underline decoration-dotted underline-offset-4 hover:text-foreground transition-colors"
 							>
 								moonrepo
 							</a>
 							, featuring <strong>FastAPI</strong> backend,{" "}
 							<strong>React 19</strong> frontend with <strong>TanStack</strong>{" "}
-							ecosystem, type-safe API communication, and built-in{" "}
-							<strong>RBAC</strong>.
+							ecosystem, <strong>Jotai</strong> state management, type-safe API
+							communication, and built-in <strong>RBAC</strong>.
 						</p>
 						<div className="flex gap-3">
 							<Link to="/register">
@@ -90,43 +91,43 @@ function LandingPage() {
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
 						<FeatureCard
 							title="Monorepo Architecture"
-							description="Organized with moonrepo for efficient task orchestration"
+							description="Organized with moonrepo for efficient task orchestration, dependency management, and caching across multiple projects"
 						/>
 						<FeatureCard
 							title="Type-Safe API Client"
-							description="Shared TypeScript package (@repo/core) for frontend-backend communication"
+							description="Shared TypeScript package (@repo/core) with ky HTTP client, automatic token refresh, and tRPC-like DX"
 						/>
 						<FeatureCard
-							title="Modern Frontend"
-							description="React 19 with TanStack Router (file-based routing), Query, and Tailwind CSS 4"
+							title="Modern Frontend Stack"
+							description="React 19 with TanStack Router (file-based routing), TanStack Query, Jotai state management, and Tailwind CSS 4"
 						/>
 						<FeatureCard
 							title="Async Python Backend"
-							description="FastAPI with SQLModel, PostgreSQL, JWT + OAuth authentication via Authlib"
+							description="FastAPI with SQLModel + SQLAlchemy 2, async PostgreSQL, JWT + OAuth authentication via Authlib"
 						/>
 						<FeatureCard
 							title="OAuth Integration"
-							description="Google and GitHub OAuth with automatic user linking and account creation"
+							description="Google and GitHub OAuth with automatic user linking, account creation, and secure token management"
 						/>
 						<FeatureCard
 							title="Real-time Communication"
-							description="WebSocket support with Redis-backed connection management for horizontal scaling"
+							description="WebSocket support with Redis-backed connection management for horizontal scaling and pub/sub"
 						/>
 						<FeatureCard
 							title="Background Jobs"
-							description="Celery integration for asynchronous task processing with Redis broker"
+							description="Celery integration for asynchronous task processing with Redis broker and flower monitoring"
 						/>
 						<FeatureCard
 							title="Database Migrations"
-							description="Alembic for version-controlled schema changes with auto-generation"
+							description="Alembic for version-controlled schema changes with auto-generation from SQLModel definitions"
 						/>
 						<FeatureCard
 							title="Role-Based Access Control"
-							description="Built-in RBAC with USER, MODERATOR, and ADMIN roles for permission management"
+							description="Built-in RBAC with USER, MODERATOR, and ADMIN roles, protected routes, and permission management"
 						/>
 						<FeatureCard
 							title="Developer Experience"
-							description="Hot reload, DevTools, type checking, Biome formatting, and Husky pre-commit hooks"
+							description="Hot reload, React DevTools, TanStack Query DevTools, type checking, Biome formatting, and Husky hooks"
 						/>
 					</div>
 				</div>
@@ -148,6 +149,7 @@ function LandingPage() {
 								"React 19.2",
 								"TanStack Router 1.132",
 								"TanStack Query 5.66",
+								"Jotai (state management)",
 								"Vite 5",
 								"Tailwind CSS 4",
 								"TypeScript 5.7",
@@ -162,20 +164,20 @@ function LandingPage() {
 								"PostgreSQL 14+",
 								"Alembic 1.17",
 								"JWT + OAuth (Authlib)",
-								"Celery 5.6",
-								"Redis 7.1",
-								"Uvicorn 0.40",
+								"Celery 5.6 + Redis",
+								"Uvicorn 0.40 (ASGI server)",
+								"Pydantic validation",
 							]}
 						/>
 						<TechStackCard
 							title="Shared & Tools"
 							items={[
 								"Ky (HTTP client)",
-								"Moonrepo",
-								"PNPM",
-								"UV (Python)",
-								"Biome",
-								"Husky",
+								"Moonrepo (task runner)",
+								"PNPM (package manager)",
+								"UV (Python package manager)",
+								"Biome (linter/formatter)",
+								"Husky (git hooks)",
 							]}
 						/>
 					</div>
@@ -268,19 +270,19 @@ moon run platform:dev  # Terminal 2 (Frontend at :3000)`}
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
 						<ArchitectureCard
 							title="Monorepo with Moonrepo"
-							description="Efficient task orchestration, caching, and dependency management across multiple projects"
+							description="Efficient task orchestration, intelligent caching, and dependency management across apps and packages"
 						/>
 						<ArchitectureCard
-							title="FastAPI + SQLModel"
-							description="Modern Python async framework with SQLModel combining SQLAlchemy ORM and Pydantic validation"
+							title="3-Layer Backend Architecture"
+							description="Clean separation: API routes → Service layer → Database models for maintainable, testable code"
 						/>
 						<ArchitectureCard
-							title="TanStack Ecosystem"
-							description="Best-in-class routing and data fetching for React with type safety"
+							title="TanStack + Jotai Ecosystem"
+							description="File-based routing, server state with React Query, client state with Jotai atoms - no prop drilling"
 						/>
 						<ArchitectureCard
 							title="Shared Type-Safe API Client"
-							description="Single source of truth for types, IDE autocomplete, tRPC-like DX"
+							description="Single source of truth with auto token refresh, error handling, and tRPC-like developer experience"
 						/>
 					</div>
 				</div>
