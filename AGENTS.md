@@ -79,9 +79,7 @@ packages/core/src/
 ## Adding Features
 
 **Backend**: model → migration (`alembic revision --autogenerate`) → serializer → service → router → register in `main.py`
-
 **Frontend**: route (`routes/{name}.tsx`) → module (`modules/{feature}/`) → components + hooks → use in route
-
 **Shared**: types (`types/{feature}.ts`) → API class (`api/{feature}.ts`) → attach to main Api → export types
 
 ---
@@ -99,9 +97,7 @@ cd apps/api && uv run alembic revision --autogenerate -m "msg"
 uv run alembic upgrade head
 
 # Quality
-pnpm run format          # Biome
-moon run api:check       # Python type check
-moon :check              # Pre-commit
+moon :lint              # Pre-commit
 ```
 
 ---
@@ -109,7 +105,6 @@ moon :check              # Pre-commit
 ## WebSocket & Celery
 
 **WebSocket**: `/ws/{client_id}`, Redis-backed, multi-instance ready
-
 **Celery**: Create task in `tasks/{task}.py`, trigger with `.delay()`, run `moon run api:worker`
 
 ---
