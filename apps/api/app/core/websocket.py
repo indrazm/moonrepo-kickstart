@@ -1,8 +1,10 @@
 import asyncio
 import logging
 from typing import Dict
+
 from fastapi import WebSocket
 from redis.asyncio import Redis
+
 from app.core.settings import settings
 
 logger = logging.getLogger(__name__)
@@ -24,7 +26,6 @@ class ConnectionManager:
         self.active_connections[client_id] = websocket
         # Persist connection in Redis
         if self.redis:
-            # type: ignore[awaitable-is-not-function]
             await self.redis.sadd("ws:active_connections", client_id)  # type: ignore[misc]
 
     async def disconnect(self, client_id: str):

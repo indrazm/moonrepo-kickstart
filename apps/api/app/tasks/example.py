@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+
 from redis import Redis
 
 from app.core.celery import celery_app
