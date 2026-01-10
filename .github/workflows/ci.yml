@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - uses: moonrepo/setup-toolchain@v0
         with:
@@ -31,10 +31,10 @@ jobs:
           ALL=$(moon query projects --json)
           CHANGED=$(moon query projects --affected --json)
 
-          echo "api=$(echo "$CHANGED" | jq -r '.[] | select(.id == "api") | .id' | head -c1)" >> $GITHUB_OUTPUT
-          echo "platform=$(echo "$CHANGED" | jq -r '.[] | select(.id == "platform") | .id' | head -c1)" >> $GITHUB_OUTPUT
-          echo "core=$(echo "$CHANGED" | jq -r '.[] | select(.id == "core") | .id' | head -c1)" >> $GITHUB_OUTPUT
-          echo "ui=$(echo "$CHANGED" | jq -r '.[] | select(.id == "ui") | .id' | head -c1)" >> $GITHUB_OUTPUT
+          echo "api=$(echo "$CHANGED" | jq -r 'map(select(.id == "api")) | any' | head -c1)" >> $GITHUB_OUTPUT
+          echo "platform=$(echo "$CHANGED" | jq -r 'map(select(.id == "platform")) | any' | head -c1)" >> $GITHUB_OUTPUT
+          echo "core=$(echo "$CHANGED" | jq -r 'map(select(.id == "core")) | any' | head -c1)" >> $GITHUB_OUTPUT
+          echo "ui=$(echo "$CHANGED" | jq -r 'map(select(.id == "ui")) | any' | head -c1)" >> $GITHUB_OUTPUT
           echo "apps=$(echo "$CHANGED" | jq -r '[.[].id] | join(",")')" >> $GITHUB_OUTPUT
 
           echo "All projects:"
@@ -50,6 +50,8 @@ jobs:
     if: needs.detect-changes.outputs.api != ''
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: moonrepo/setup-toolchain@v0
         with:
@@ -67,6 +69,8 @@ jobs:
     if: needs.detect-changes.outputs.platform != ''
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: moonrepo/setup-toolchain@v0
         with:
@@ -85,6 +89,8 @@ jobs:
     if: needs.detect-changes.outputs.core != '' || needs.detect-changes.outputs.ui != ''
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: moonrepo/setup-toolchain@v0
         with:
