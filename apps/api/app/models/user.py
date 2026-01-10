@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
+from ulid import ULID
 
 
 class User(SQLModel, table=True):
@@ -14,7 +15,12 @@ class User(SQLModel, table=True):
     __tablename__ = "users"
 
     # Primary key
-    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    id: str = Field(
+        default_factory=lambda: str(ULID()),
+        primary_key=True,
+        index=True,
+        max_length=26,
+    )
 
     # Required fields
     email: str = Field(unique=True, index=True)

@@ -22,7 +22,7 @@ class UserCreate(UserBase):
 class UserResponse(UserBase):
     """Schema for API responses (excludes sensitive fields)"""
 
-    id: int
+    id: str
     is_active: bool
     oauth_provider: Optional[str] = None
     avatar_url: Optional[str] = None
