@@ -28,20 +28,20 @@ jobs:
       - id: projects
         name: List affected projects
         run: |
-          ALL=$(moon query projects --json)
-          CHANGED=$(moon query projects --affected --json)
+          moon query projects --json > all.json
+          moon query projects --affected --json > changed.json
 
-          echo "api=$(echo "$CHANGED" | jq -r 'map(select(.id == "api")) | any' | head -c1)" >> $GITHUB_OUTPUT
-          echo "platform=$(echo "$CHANGED" | jq -r 'map(select(.id == "platform")) | any' | head -c1)" >> $GITHUB_OUTPUT
-          echo "core=$(echo "$CHANGED" | jq -r 'map(select(.id == "core")) | any' | head -c1)" >> $GITHUB_OUTPUT
-          echo "ui=$(echo "$CHANGED" | jq -r 'map(select(.id == "ui")) | any' | head -c1)" >> $GITHUB_OUTPUT
-          echo "apps=$(echo "$CHANGED" | jq -r '[.[].id] | join(",")')" >> $GITHUB_OUTPUT
+          echo "api=$(jq -r 'map(select(.id == "api")) | any | tostring' changed.json)" >> $GITHUB_OUTPUT
+          echo "platform=$(jq -r 'map(select(.id == "platform")) | any | tostring' changed.json)" >> $GITHUB_OUTPUT
+          echo "core=$(jq -r 'map(select(.id == "core")) | any | tostring' changed.json)" >> $GITHUB_OUTPUT
+          echo "ui=$(jq -r 'map(select(.id == "ui")) | any | tostring' changed.json)" >> $GITHUB_OUTPUT
+          echo "apps=$(jq -r '[.[].id] | join(",")' changed.json)" >> $GITHUB_OUTPUT
 
           echo "All projects:"
-          echo "$ALL" | jq -r '.[].id'
+          jq -r '.[].id' all.json
           echo ""
           echo "Changed projects:"
-          echo "$CHANGED" | jq -r '.[].id'
+          jq -r '.[].id' changed.json
 
   api:
     name: API
