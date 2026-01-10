@@ -57,7 +57,8 @@ function LandingPage() {
 							</a>
 							, featuring <strong>FastAPI</strong> backend,{" "}
 							<strong>React 19</strong> frontend with <strong>TanStack</strong>{" "}
-							ecosystem, and type-safe API communication.
+							ecosystem, type-safe API communication, and built-in{" "}
+							<strong>RBAC</strong>.
 						</p>
 						<div className="flex gap-3">
 							<Link to="/register">
@@ -118,6 +119,10 @@ function LandingPage() {
 						<FeatureCard
 							title="Database Migrations"
 							description="Alembic for version-controlled schema changes with auto-generation"
+						/>
+						<FeatureCard
+							title="Role-Based Access Control"
+							description="Built-in RBAC with USER, MODERATOR, and ADMIN roles for permission management"
 						/>
 						<FeatureCard
 							title="Developer Experience"
