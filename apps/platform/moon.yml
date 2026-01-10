@@ -10,6 +10,8 @@ tasks:
 
   build:
     command: "pnpm run build"
+    deps:
+      - "ui:build"
 
   test:
     command: "pnpm run test"
