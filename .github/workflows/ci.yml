@@ -86,6 +86,9 @@ jobs:
         with:
           auto-setup: true
 
+      - name: Install dependencies
+        run: moon sync
+
       - run: moon run platform:lint
       - run: moon run platform:build
 
@@ -110,6 +113,9 @@ jobs:
       - uses: moonrepo/setup-toolchain@v0
         with:
           auto-setup: true
+
+      - name: Install dependencies
+        run: moon sync
 
       - name: Lint affected packages
         run: |

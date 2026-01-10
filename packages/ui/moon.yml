@@ -23,12 +23,12 @@ tasks:
       - 'dist/styles.css'
 
   lint:
-    command: 'biome check'
+    command: 'pnpm exec biome check'
     inputs:
       - 'src/**/*'
 
   lint-fix:
-    command: 'biome check --fix --unsafe'
+    command: 'pnpm exec biome check --fix --unsafe'
     inputs:
       - 'src/**/*'
 
