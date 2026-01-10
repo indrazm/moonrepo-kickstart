@@ -73,6 +73,7 @@ export {
 	SelectTrigger,
 	SelectValue,
 } from "./components/ui/select";
+export { Toaster } from "./components/ui/sonner";
 export { Switch } from "./components/ui/switch";
 export { Textarea } from "./components/ui/textarea";
 export {
@@ -86,6 +87,5 @@ export {
 	ToastTitle,
 	ToastViewport,
 } from "./components/ui/toast";
-export { Toaster } from "./components/ui/sonner";
 export { Toggle, toggleVariants } from "./components/ui/toggle";
 export { cn } from "./lib/utils";

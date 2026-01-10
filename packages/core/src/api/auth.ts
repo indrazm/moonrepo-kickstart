@@ -7,7 +7,6 @@ import type {
 	Token,
 	UserCreate,
 	UserResponse,
-	UserRoleUpdate,
 	UserRole,
 } from "../types";
 

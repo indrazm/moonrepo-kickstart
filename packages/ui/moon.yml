@@ -22,6 +22,16 @@ tasks:
     outputs:
       - 'dist/styles.css'
 
+  lint:
+    command: 'biome check'
+    inputs:
+      - 'src/**/*'
+
+  lint-fix:
+    command: 'biome check --fix --unsafe'
+    inputs:
+      - 'src/**/*'
+
   typecheck:
     command: 'tsc --noEmit'
     inputs:

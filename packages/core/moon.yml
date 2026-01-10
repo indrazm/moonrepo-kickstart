@@ -3,6 +3,16 @@ language: 'typescript'
 platform: 'node'
 
 tasks:
+  lint:
+    command: 'biome check'
+    inputs:
+      - 'src/**/*'
+
+  lint-fix:
+    command: 'biome check --fix --unsafe'
+    inputs:
+      - 'src/**/*'
+
   test:
     command: 'vitest run'
     inputs:

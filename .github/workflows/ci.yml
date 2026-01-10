@@ -96,5 +96,11 @@ jobs:
         with:
           auto-setup: true
 
-      - run: moon run core:lint
-      - run: moon run ui:lint
+      - name: Lint affected packages
+        run: |
+          if [ "${{ needs.detect-changes.outputs.core }}" != "" ]; then
+            moon run core:lint
+          fi
+          if [ "${{ needs.detect-changes.outputs.ui }}" != "" ]; then
+            moon run ui:lint
+          fi
