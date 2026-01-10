@@ -13,7 +13,7 @@ function LandingPage() {
 			<header className="border-b sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
 				<div className="max-w-7xl mx-auto px-6 py-4">
 					<div className="flex items-center justify-between">
-						<div className="text-xl font-bold">Moonrepo Kickstart</div>
+						<div className="text-xl font-bold">Moonrepo Kickstart Template</div>
 						<nav className="flex items-center gap-6">
 							<a
 								href="https://github.com/indrazm/moonrepo-kickstart"
