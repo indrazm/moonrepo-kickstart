@@ -1,13 +1,6 @@
 import { Button } from "@repo/ui";
-import {
-	createFileRoute,
-	Link,
-	Outlet,
-	useNavigate,
-} from "@tanstack/react-router";
-import { ModeToggle } from "@/components/mode-toggle";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Sidebar } from "@/components/sidebar";
-import { api } from "@/lib/api";
 import { useMe } from "@/modules/auth/hooks/useMe";
 
 export const Route = createFileRoute("/_dashboardLayout")({
@@ -15,13 +8,7 @@ export const Route = createFileRoute("/_dashboardLayout")({
 });
 
 function DashboardLayout() {
-	const navigate = useNavigate();
 	const { isLoading, error } = useMe();
-
-	const handleLogout = () => {
-		api.auth.logout();
-		navigate({ to: "/login" });
-	};
 
 	if (isLoading) {
 		return (
@@ -56,24 +43,11 @@ function DashboardLayout() {
 	}
 
 	return (
-		<div className="flex h-screen">
+		<div className="flex h-screen overflow-hidden bg-background">
 			<Sidebar />
-			<div className="flex-1 flex flex-col">
-				<header className="bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-					<div className="px-6 py-4">
-						<div className="flex items-center justify-end gap-4">
-							<ModeToggle />
-							<Button variant="outline" onClick={handleLogout}>
-								Logout
-							</Button>
-						</div>
-					</div>
-				</header>
-
-				<main className="flex-1 overflow-y-auto bg-background">
-					<div className="container mx-auto px-6 py-8">
-						<Outlet />
-					</div>
+			<div className="flex-1 flex flex-col relative min-w-0">
+				<main className="flex-1 flex flex-col h-full overflow-hidden">
+					<Outlet />
 				</main>
 			</div>
 		</div>

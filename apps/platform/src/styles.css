@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@repo/ui/styles.css";
+@plugin "@tailwindcss/typography";
 
 body {
 	@apply m-0;

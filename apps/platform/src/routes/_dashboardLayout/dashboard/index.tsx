@@ -1,96 +1,209 @@
+import {
+	Avatar,
+	Button,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+	Textarea,
+} from "@repo/ui";
 import { createFileRoute } from "@tanstack/react-router";
+import { ArrowUp, Bot, Mic, Paperclip } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useMe } from "@/modules/auth/hooks/useMe";
 
 export const Route = createFileRoute("/_dashboardLayout/dashboard/")({
 	component: DashboardPage,
 });
 
+type Message = {
+	id: string;
+	role: "user" | "assistant";
+	content: string;
+};
+
 function DashboardPage() {
 	const { data: user } = useMe();
+	const [input, setInput] = useState("");
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const [model, setModel] = useState("agent");
+
+	// Mock messages
+	const [messages, setMessages] = useState<Message[]>([
+		{
+			id: "1",
+			role: "assistant",
+			content: "Hello! I'm your AI assistant. How can I help you today?",
+		},
+		{
+			id: "2",
+			role: "user",
+			content: "Can you help me design a dashboard?",
+		},
+		{
+			id: "3",
+			role: "assistant",
+			content:
+				"Absolutely! I can help you design a modern, user-friendly dashboard. Here are a few key principles to consider:\n\n1. **Clarity**: Keep the layout clean and focus on the most important metrics.\n2. **Consistency**: Use a consistent color palette and typography.\n3. **Hierarchy**: Organize information logically, with critical data at the top.\n\nWould you like to see some wireframe examples or discuss specific features?",
+		},
+	]);
+
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	};
+
+	useEffect(() => {
+		scrollToBottom();
+	}, []);
+
+	const handleSend = () => {
+		if (!input.trim()) return;
+
+		const newMessage: Message = {
+			id: Date.now().toString(),
+			role: "user",
+			content: input,
+		};
+
+		setMessages((prev) => [...prev, newMessage]);
+		setInput("");
+
+		// Mock response delay
+		setTimeout(() => {
+			setMessages((prev) => [
+				...prev,
+				{
+					id: (Date.now() + 1).toString(),
+					role: "assistant",
+					content:
+						"That's a great point! I'll note that down. Is there anything else you'd like to add?",
+				},
+			]);
+		}, 1000);
+	};
 
 	return (
-		<div className="mx-auto max-w-4xl space-y-8">
-			<div>
-				<h1 className="text-4xl font-bold">Dashboard</h1>
-				<p className="text-muted-foreground mt-2">
-					Welcome back to your dashboard
-				</p>
+		<div className="flex flex-col h-full bg-background text-foreground">
+			{/* Model Selector Header */}
+			<div className="flex items-center justify-between px-4 py-3 bg-background/95 backdrop-blur z-10">
+				<Select value={model} onValueChange={setModel}>
+					<SelectTrigger className="w-fit border-none shadow-none focus:ring-0 text-lg font-semibold px-2 bg-transparent hover:bg-accent/50 transition-colors gap-2">
+						<SelectValue placeholder="Select Model" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="agent">Our AI Agent</SelectItem>
+						<SelectItem value="gpt4">GPT-4</SelectItem>
+						<SelectItem value="claude">Claude 3.5 Sonnet</SelectItem>
+					</SelectContent>
+				</Select>
 			</div>
 
-			{/* User Information Card */}
-			<div className="rounded-lg border bg-card p-6 space-y-4">
-				<h2 className="text-2xl font-semibold">User Information</h2>
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-					<div className="space-y-1">
-						<p className="text-sm font-medium text-muted-foreground">User ID</p>
-						<p className="text-lg">{user?.id}</p>
-					</div>
-					<div className="space-y-1">
-						<p className="text-sm font-medium text-muted-foreground">
-							Username
-						</p>
-						<p className="text-lg">{user?.username}</p>
-					</div>
-					<div className="space-y-1">
-						<p className="text-sm font-medium text-muted-foreground">Email</p>
-						<p className="text-lg">{user?.email}</p>
-					</div>
-					<div className="space-y-1">
-						<p className="text-sm font-medium text-muted-foreground">
-							Account Status
-						</p>
-						<p className="text-lg">
-							{user?.is_active ? (
-								<span className="text-green-600 font-medium">Active</span>
-							) : (
-								<span className="text-red-600 font-medium">Inactive</span>
+			{/* Chat Area */}
+			<div className="flex-1 overflow-y-auto px-4 py-6 md:px-0">
+				<div className="max-w-3xl mx-auto space-y-8">
+					{messages.map((message) => (
+						<div
+							key={message.id}
+							className={`flex gap-4 ${
+								message.role === "assistant" ? "" : "justify-end"
+							}`}
+						>
+							{message.role === "assistant" && (
+								<div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shrink-0 text-white">
+									<Bot size={18} />
+								</div>
 							)}
-						</p>
-					</div>
-					{user?.oauth_provider && (
-						<div className="space-y-1">
-							<p className="text-sm font-medium text-muted-foreground">
-								OAuth Provider
-							</p>
-							<p className="text-lg capitalize">{user.oauth_provider}</p>
+
+							<div
+								className={`max-w-[80%] space-y-2 ${
+									message.role === "user"
+										? "bg-muted/50 px-5 py-3 rounded-3xl"
+										: ""
+								}`}
+							>
+								{message.role === "user" ? (
+									<p className="whitespace-pre-wrap text-sm">
+										{message.content}
+									</p>
+								) : (
+									<div className="prose dark:prose-invert prose-sm max-w-none">
+										<p className="whitespace-pre-wrap">{message.content}</p>
+									</div>
+								)}
+							</div>
+
+							{message.role === "user" && (
+								<Avatar className="w-8 h-8 shrink-0">
+									{user?.avatar_url ? (
+										<img
+											src={user.avatar_url}
+											alt={user.username}
+											className="object-cover"
+										/>
+									) : (
+										<div className="w-full h-full bg-primary flex items-center justify-center text-primary-foreground text-xs">
+											{user?.username?.slice(0, 2).toUpperCase() || "ME"}
+										</div>
+									)}
+								</Avatar>
+							)}
 						</div>
-					)}
-					{user?.full_name && (
-						<div className="space-y-1">
-							<p className="text-sm font-medium text-muted-foreground">
-								Full Name
-							</p>
-							<p className="text-lg">{user.full_name}</p>
-						</div>
-					)}
+					))}
+					<div ref={messagesEndRef} />
 				</div>
-				{user?.avatar_url && (
-					<div className="pt-4 border-t">
-						<p className="text-sm font-medium text-muted-foreground mb-2">
-							Avatar
-						</p>
-						<img
-							src={user.avatar_url}
-							alt="User avatar"
-							className="w-20 h-20 rounded-full"
-						/>
-					</div>
-				)}
 			</div>
 
-			{/* Quick Stats */}
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-				<div className="rounded-lg border p-6 space-y-2">
-					<p className="text-sm font-medium text-muted-foreground">Projects</p>
-					<p className="text-3xl font-bold">0</p>
-				</div>
-				<div className="rounded-lg border p-6 space-y-2">
-					<p className="text-sm font-medium text-muted-foreground">Tasks</p>
-					<p className="text-3xl font-bold">0</p>
-				</div>
-				<div className="rounded-lg border p-6 space-y-2">
-					<p className="text-sm font-medium text-muted-foreground">Activity</p>
-					<p className="text-3xl font-bold">0</p>
+			{/* Input Area */}
+			<div className="p-4 bg-background">
+				<div className="max-w-3xl mx-auto">
+					<div className="relative flex flex-col bg-muted/50 rounded-3xl border focus-within:ring-1 focus-within:ring-ring focus-within:border-ring transition-all">
+						<Textarea
+							value={input}
+							onChange={(e) => setInput(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" && !e.shiftKey) {
+									e.preventDefault();
+									handleSend();
+								}
+							}}
+							placeholder="Message Our AI Agent"
+							className="min-h-12.5 max-h-50 w-full resize-none border-0 bg-transparent py-4 px-4 focus-visible:ring-0 shadow-none"
+						/>
+						<div className="flex justify-between items-center px-2 pb-2">
+							<div className="flex gap-2">
+								<Button
+									variant="ghost"
+									size="icon"
+									className="text-muted-foreground hover:bg-background rounded-full w-8 h-8"
+								>
+									<Paperclip size={18} />
+								</Button>
+							</div>
+							<div className="flex gap-2">
+								<Button
+									variant="ghost"
+									size="icon"
+									className="text-muted-foreground hover:bg-background rounded-full w-8 h-8"
+								>
+									<Mic size={18} />
+								</Button>
+								<Button
+									onClick={handleSend}
+									disabled={!input.trim()}
+									size="icon"
+									className="rounded-full w-8 h-8 bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
+								>
+									<ArrowUp size={18} />
+								</Button>
+							</div>
+						</div>
+					</div>
+					<div className="text-center mt-2">
+						<p className="text-xs text-muted-foreground">
+							Our AI Agent can make mistakes. Check important info.
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
