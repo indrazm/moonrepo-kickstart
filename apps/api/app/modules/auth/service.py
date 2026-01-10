@@ -215,3 +215,21 @@ def require_role(required_role: UserRole):
         return current_user
 
     return role_checker
+
+
+async def update_user_profile(
+    db: AsyncSession, user: User, full_name: str | None, avatar_url: str | None
+) -> User:
+    """
+    Update user profile fields.
+
+    Only updates provided fields (full_name, avatar_url).
+    """
+    if full_name is not None:
+        user.full_name = full_name
+    if avatar_url is not None:
+        user.avatar_url = avatar_url
+
+    await db.commit()
+    await db.refresh(user)
+    return user

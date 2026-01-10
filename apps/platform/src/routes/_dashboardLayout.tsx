@@ -6,6 +6,7 @@ import {
 	useNavigate,
 } from "@tanstack/react-router";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Sidebar } from "@/components/sidebar";
 import { api } from "@/lib/api";
 import { useMe } from "@/modules/auth/hooks/useMe";
 
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/_dashboardLayout")({
 
 function DashboardLayout() {
 	const navigate = useNavigate();
-	const { data: user, isLoading, error } = useMe();
+	const { isLoading, error } = useMe();
 
 	const handleLogout = () => {
 		api.auth.logout();
@@ -55,45 +56,26 @@ function DashboardLayout() {
 	}
 
 	return (
-		<div className="min-h-screen bg-linear-to-b from-background to-muted/20">
-			<header className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-				<div className="container mx-auto px-4 py-4">
-					<div className="flex items-center justify-between">
-						<Link to="/" className="text-2xl font-bold">
-							Moonrepo Kickstart
-						</Link>
-
-						<nav className="flex items-center gap-6">
-							<Link
-								to="/dashboard"
-								className="text-sm font-medium transition-colors hover:text-primary"
-								activeProps={{
-									className: "text-foreground",
-								}}
-								inactiveProps={{
-									className: "text-muted-foreground",
-								}}
-							>
-								Dashboard
-							</Link>
-						</nav>
-
-						<div className="flex items-center gap-4">
-							<span className="text-sm text-muted-foreground">
-								{user?.username}
-							</span>
+		<div className="flex h-screen">
+			<Sidebar />
+			<div className="flex-1 flex flex-col">
+				<header className="bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+					<div className="px-6 py-4">
+						<div className="flex items-center justify-end gap-4">
 							<ModeToggle />
 							<Button variant="outline" onClick={handleLogout}>
 								Logout
 							</Button>
 						</div>
 					</div>
-				</div>
-			</header>
+				</header>
 
-			<main className="container mx-auto px-4 py-12">
-				<Outlet />
-			</main>
+				<main className="flex-1 overflow-y-auto bg-background">
+					<div className="container mx-auto px-6 py-8">
+						<Outlet />
+					</div>
+				</main>
+			</div>
 		</div>
 	);
 }

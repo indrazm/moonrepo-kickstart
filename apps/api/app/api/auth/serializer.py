@@ -69,3 +69,13 @@ class UserRoleUpdate(SQLModel):
     """Schema for updating user role (admin only)"""
 
     role: UserRole
+
+
+# --- Profile Management Schemas ---
+
+
+class UserProfileUpdate(SQLModel):
+    """Schema for updating user profile"""
+
+    full_name: Optional[str] = None
+    avatar_url: Optional[str] = None

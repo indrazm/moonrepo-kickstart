@@ -133,6 +133,7 @@ cd apps/api && uv run alembic revision --autogenerate -m "msg"
 uv run alembic upgrade head
 
 moon :lint                # Pre-commit hook
+moon :lint-fix            # Use this to fix any lint first before changing manually.
 ```
 
 ---

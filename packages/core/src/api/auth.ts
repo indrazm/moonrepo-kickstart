@@ -6,6 +6,7 @@ import type {
 	RefreshTokenRequest,
 	Token,
 	UserCreate,
+	UserProfileUpdate,
 	UserResponse,
 	UserRole,
 } from "../types";
@@ -30,6 +31,10 @@ export class AuthApi {
 
 	async me(): Promise<UserResponse> {
 		return this.client.get<UserResponse>("auth/me");
+	}
+
+	async updateProfile(data: UserProfileUpdate): Promise<UserResponse> {
+		return this.client.patch<UserResponse>("auth/me", data);
 	}
 
 	async refresh(data: RefreshTokenRequest): Promise<AccessTokenResponse> {

@@ -14,6 +14,7 @@ from app.modules.auth.service import (
     get_current_user,
     get_current_admin,
     get_user_by_id,
+    update_user_profile,
 )
 from app.modules.auth.oauth_service import (
     handle_google_callback,
@@ -29,6 +30,7 @@ from .serializer import (
     AccessTokenResponse,
     OAuthUrlResponse,
     UserRoleUpdate,
+    UserProfileUpdate,
 )
 from sqlmodel import select
 from app.core.settings import settings
@@ -59,6 +61,19 @@ async def login(
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
     return current_user
+
+
+@router.patch("/me", response_model=UserResponse)
+async def update_users_me(
+    profile_data: UserProfileUpdate,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+):
+    """Update current user's profile"""
+    updated_user = await update_user_profile(
+        db, current_user, profile_data.full_name, profile_data.avatar_url
+    )
+    return updated_user
 
 
 @router.post("/refresh", response_model=AccessTokenResponse)

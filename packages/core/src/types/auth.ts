@@ -58,3 +58,8 @@ export interface LoginRequest {
 export interface UserRoleUpdate {
 	role: UserRole;
 }
+
+export interface UserProfileUpdate {
+	full_name?: string | null;
+	avatar_url?: string | null;
+}
