@@ -12,4 +12,7 @@ tasks:
     command: "uv run celery -A app.core.celery worker --pool=threads --loglevel=info"
 
   lint:
-    command: "uv run ty check"
+    command: "uv run ruff check"
+
+  lint-fix:
+    command: "uv run ruff check --fix"

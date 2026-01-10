@@ -5,14 +5,22 @@ export interface ApiClientConfig {
 	headers?: Record<string, string>;
 	timeout?: number;
 	hooks?: Options["hooks"];
+	onTokenRefreshFailed?: () => void;
 }
 
 export class ApiClient {
 	private client: KyInstance;
 	private static ACCESS_TOKEN_KEY = "access_token";
 	private static REFRESH_TOKEN_KEY = "refresh_token";
+	private isRefreshing = false;
+	private refreshPromise: Promise<string> | null = null;
+	private onTokenRefreshFailed?: () => void;
+	private baseUrl: string;
 
 	constructor(config: ApiClientConfig) {
+		this.onTokenRefreshFailed = config.onTokenRefreshFailed;
+		this.baseUrl = config.baseUrl;
+
 		this.client = ky.create({
 			prefixUrl: config.baseUrl,
 			timeout: config.timeout || 30000,
@@ -23,11 +31,39 @@ export class ApiClient {
 			hooks: {
 				beforeRequest: [
 					(request) => {
-						// Automatically add auth token if available
 						const accessToken = this.getAccessToken();
 						if (accessToken) {
 							request.headers.set("Authorization", `Bearer ${accessToken}`);
 						}
+					},
+				],
+				afterResponse: [
+					async (request, _options, response) => {
+						if (response.status === 401) {
+							const refreshToken = this.getRefreshToken();
+
+							// Prevent infinite loop: don't refresh on the refresh endpoint itself
+							if (request.url.includes("/auth/refresh") || !refreshToken) {
+								return response;
+							}
+
+							try {
+								const newAccessToken =
+									await this.refreshAccessToken(refreshToken);
+
+								request.headers.set(
+									"Authorization",
+									`Bearer ${newAccessToken}`,
+								);
+								return ky(request);
+							} catch (error) {
+								this.clearTokens();
+								this.onTokenRefreshFailed?.();
+								throw error;
+							}
+						}
+
+						return response;
 					},
 				],
 				...config.hooks,
@@ -35,9 +71,40 @@ export class ApiClient {
 		});
 	}
 
-	/**
-	 * Set authentication tokens
-	 */
+	// Deduplicates concurrent refresh requests to prevent race conditions
+	private async refreshAccessToken(refreshToken: string): Promise<string> {
+		if (this.isRefreshing && this.refreshPromise) {
+			return this.refreshPromise;
+		}
+
+		this.isRefreshing = true;
+		this.refreshPromise = (async () => {
+			try {
+				const response = await ky.post("auth/refresh", {
+					prefixUrl: this.baseUrl,
+					json: { refresh_token: refreshToken },
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+
+				const data = await response.json<{
+					access_token: string;
+					token_type: string;
+				}>();
+
+				this.setTokens(data.access_token);
+
+				return data.access_token;
+			} finally {
+				this.isRefreshing = false;
+				this.refreshPromise = null;
+			}
+		})();
+
+		return this.refreshPromise;
+	}
+
 	setTokens(accessToken: string, refreshToken?: string) {
 		if (typeof window !== "undefined") {
 			localStorage.setItem(ApiClient.ACCESS_TOKEN_KEY, accessToken);
@@ -47,9 +114,6 @@ export class ApiClient {
 		}
 	}
 
-	/**
-	 * Clear authentication tokens
-	 */
 	clearTokens() {
 		if (typeof window !== "undefined") {
 			localStorage.removeItem(ApiClient.ACCESS_TOKEN_KEY);
@@ -57,9 +121,6 @@ export class ApiClient {
 		}
 	}
 
-	/**
-	 * Get the current access token
-	 */
 	getAccessToken() {
 		if (typeof window !== "undefined") {
 			return localStorage.getItem(ApiClient.ACCESS_TOKEN_KEY) || undefined;
@@ -67,9 +128,6 @@ export class ApiClient {
 		return undefined;
 	}
 
-	/**
-	 * Get the current refresh token
-	 */
 	getRefreshToken() {
 		if (typeof window !== "undefined") {
 			return localStorage.getItem(ApiClient.REFRESH_TOKEN_KEY) || undefined;
@@ -77,17 +135,11 @@ export class ApiClient {
 		return undefined;
 	}
 
-	/**
-	 * Make a GET request
-	 */
 	async get<T>(path: string, options?: Options): Promise<T> {
 		const response = await this.client.get(path, options);
 		return response.json<T>();
 	}
 
-	/**
-	 * Make a POST request
-	 */
 	async post<T>(path: string, data?: unknown, options?: Options): Promise<T> {
 		const response = await this.client.post(path, {
 			json: data,
@@ -96,9 +148,6 @@ export class ApiClient {
 		return response.json<T>();
 	}
 
-	/**
-	 * Make a POST request with form data
-	 */
 	async postForm<T>(
 		path: string,
 		data: Record<string, string>,
@@ -115,9 +164,6 @@ export class ApiClient {
 		return response.json<T>();
 	}
 
-	/**
-	 * Make a PUT request
-	 */
 	async put<T>(path: string, data?: unknown, options?: Options): Promise<T> {
 		const response = await this.client.put(path, {
 			json: data,
@@ -126,9 +172,6 @@ export class ApiClient {
 		return response.json<T>();
 	}
 
-	/**
-	 * Make a PATCH request
-	 */
 	async patch<T>(path: string, data?: unknown, options?: Options): Promise<T> {
 		const response = await this.client.patch(path, {
 			json: data,
@@ -137,17 +180,11 @@ export class ApiClient {
 		return response.json<T>();
 	}
 
-	/**
-	 * Make a DELETE request
-	 */
 	async delete<T>(path: string, options?: Options): Promise<T> {
 		const response = await this.client.delete(path, options);
 		return response.json<T>();
 	}
 
-	/**
-	 * Get the raw Ky instance for advanced usage
-	 */
 	getRawClient(): KyInstance {
 		return this.client;
 	}

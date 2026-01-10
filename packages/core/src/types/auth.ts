@@ -1,5 +1,3 @@
-// Types matching the FastAPI serializers from @apps/api
-
 export interface UserBase {
 	email: string;
 	username: string;
@@ -45,7 +43,6 @@ export interface OAuthCallbackRequest {
 	state?: string | null;
 }
 
-// OAuth2 Password Request Form
 export interface LoginRequest {
 	username: string;
 	password: string;

@@ -218,6 +218,13 @@ moon run platform:dev
 moon run api:worker
 ```
 
+Or Running All in One Terminal:
+
+```bash
+moon :dev
+moon :worker
+```
+
 ### 5. Access the Application
 
 - **Frontend**: http://localhost:3000
