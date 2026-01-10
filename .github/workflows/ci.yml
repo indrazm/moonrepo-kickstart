@@ -21,7 +21,10 @@ jobs:
         with:
           fetch-depth: 2
 
-      - uses: moonrepo/setup@v1
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+          auto-setup: true
 
       - id: projects
         name: List affected projects
@@ -49,7 +52,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: moonrepo/setup@v1
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+          auto-setup: true
 
       - run: moon run api:lint
 
@@ -64,7 +70,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: moonrepo/setup@v1
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+          auto-setup: true
 
       - run: moon run platform:lint
       - run: moon run platform:build
@@ -80,7 +89,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: moonrepo/setup@v1
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+          auto-setup: true
 
       - run: moon run core:lint
       - run: moon run ui:lint
