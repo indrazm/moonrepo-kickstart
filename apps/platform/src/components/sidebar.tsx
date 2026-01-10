@@ -12,10 +12,10 @@ export function Sidebar() {
 				<h2 className="text-xl font-bold">Moonrepo</h2>
 			</div>
 
-			<nav className="flex-1 p-4 space-y-2">
+			<nav className="flex-1 p-4">
 				<Link
 					to="/dashboard"
-					className="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors hover:bg-accent"
+					className="flex text-sm items-center gap-3 px-4 py-2 rounded-lg transition-colors hover:bg-accent"
 					activeProps={{
 						className:
 							"flex items-center gap-3 px-4 py-2 rounded-lg bg-accent text-accent-foreground",
@@ -27,7 +27,7 @@ export function Sidebar() {
 
 				<Link
 					to="/dashboard/settings"
-					className="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors hover:bg-accent"
+					className="flex text-sm items-center gap-3 px-4 py-2 rounded-lg transition-colors hover:bg-accent"
 					activeProps={{
 						className:
 							"flex items-center gap-3 px-4 py-2 rounded-lg bg-accent text-accent-foreground",
