@@ -1,1 +1,3 @@
+#!/bin/bash
+export PATH="/Users/indrazm/.proto/shims:/Users/indrazm/.proto/bin:$PATH"
 moon :lint

@@ -40,7 +40,7 @@ function LandingPage() {
 			</header>
 
 			{/* Hero Section */}
-			<section className="border-b bg-gradient-to-b from-background via-muted/30 to-background">
+			<section className="border-b bg-linear-to-b from-background via-muted/30 to-background">
 				<div className="max-w-7xl mx-auto px-6 py-24">
 					<div className="max-w-3xl">
 						<h1 className="text-5xl font-bold tracking-tight mb-6">
