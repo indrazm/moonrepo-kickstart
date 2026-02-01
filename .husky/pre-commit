@@ -1,3 +1,4 @@
 #!/bin/bash
 export PATH="/Users/indrazm/.proto/shims:/Users/indrazm/.proto/bin:$PATH"
-moon :lint
+# Workaround: moon can't find uv in git hooks, so we run lint directly
+cd apps/api && uv run ruff check
